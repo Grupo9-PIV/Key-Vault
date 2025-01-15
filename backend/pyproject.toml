@@ -1,20 +1,24 @@
 [tool.poetry]
-name = "backend"
+name = "key_vault_api"
 version = "0.1.0"
 description = "Backend do Projeto Integrador V"
 authors = [
     "João Vitor Alves <jvitor.alol+contato@gmail.com>",
+    "Guilherme Pires Maruiti <maruiti1@gmail.com>",
+    "Abel Elias de Macedo <macedoabel.elias@gmail.com>",
+    "Ewellyn Rocio Paes de Almeida <lynnpaes03@gmail.com>",
+    "Jessica Fernandes da Silva <jessica.fernandes.adv@outlook.com>",
+    "William Matheus Gonçalves Belhome <william.belhome@gmail.com>"
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/Grupo9-PIV/Projeto-Integrador-V"
+repository = "https://github.com/Grupo9-PIV/Key-Vault/"
 homepage = "https://github.com/Grupo9-PIV"
 package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
 fastapi = {extras = ["standard"], version = "^0.115.5"}
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
