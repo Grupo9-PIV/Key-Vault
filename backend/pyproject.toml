@@ -1,23 +1,54 @@
 [tool.poetry]
-name = "backend"
+name = "key_vault_api"
 version = "0.1.0"
 description = "Backend do Projeto Integrador V"
 authors = [
     "João Vitor Alves <jvitor.alol+contato@gmail.com>",
+    "Guilherme Pires Maruiti <maruiti1@gmail.com>",
+    "Abel Elias de Macedo <macedoabel.elias@gmail.com>",
+    "Ewellyn Rocio Paes de Almeida <lynnpaes03@gmail.com>",
+    "Jessica Fernandes da Silva <jessica.fernandes.adv@outlook.com>",
+    "William Matheus Gonçalves Belhome <william.belhome@gmail.com>"
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/Grupo9-PIV/Projeto-Integrador-V"
+repository = "https://github.com/Grupo9-PIV/Key-Vault/"
 homepage = "https://github.com/Grupo9-PIV"
 package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
-fastapi = "^0.115.5"
-
+fastapi = {extras = ["standard"], version = "^0.115.5"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+ruff = "^0.7.4"
+taskipy = "^1.14.0"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.taskipy.tasks]
+run = 'fastapi dev src/app.py'
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=src -vv'
+post_test = 'coverage html'
 
 [build-system]
 requires = ["poetry-core"]
