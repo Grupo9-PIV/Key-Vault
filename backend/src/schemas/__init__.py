@@ -1,4 +1,4 @@
-from .user import UserPublic, UserSchema, UserList
+from .user import UserList, UserPublic, UserSchema
 
 __all__ = [
     'UserPublic',
