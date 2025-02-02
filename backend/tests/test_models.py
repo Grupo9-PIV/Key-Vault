@@ -1,25 +1,23 @@
-from sqlalchemy import create_engine
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.models.user import User, table_registry
+from src.models import User
 
 
-def test_create_user():
-    engine = create_engine('sqlite:///:memory:')
+def test_create_user(session: Session) -> None:
+    user = User(
+        email='teste@teste.com',
+        password_hash='12345678',
+        name='Teste',
+        role='admin',
+        department='Teste',
+    )
 
-    table_registry.metadata.create_all(engine)
+    session.add(user)
+    session.commit()
 
-    with Session(engine) as session:
-        user = User(
-            email='teste@teste.com',
-            password_hash='12345678',
-            name='Teste',
-            role='admin',
-            department='Teste',
-        )
+    result = session.scalar(
+        select(User).where(User.email == 'teste@teste.com')
+    )
 
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-
-    assert user.email == 'teste@teste.com'
+    assert result.email == 'teste@teste.com'
