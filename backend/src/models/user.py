@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from sqlalchemy import func, text
-from sqlalchemy.orm import Mapped, mapped_column, registry
+from sqlalchemy.orm import Mapped, mapped_column
 
-table_registry = registry()
+from src.database import table_registry
 
 
 @table_registry.mapped_as_dataclass
