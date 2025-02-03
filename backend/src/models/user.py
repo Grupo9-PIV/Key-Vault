@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import func, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import table_registry
 
@@ -10,6 +10,7 @@ from src.database import table_registry
 class User:
     __tablename__ = 'users'
 
+    # campos
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     email: Mapped[str] = mapped_column(unique=True)
     password_hash: Mapped[str]
@@ -26,4 +27,16 @@ class User:
         init=False,
         nullable=True,
         onupdate=func.now(),
+    )
+
+    # relacionamentos
+    licenses = relationship(
+        'License',
+        back_populates='assigned_to',
+        primaryjoin='User.id == License.assigned_to_id',
+    )
+    managed_licenses = relationship(
+        'License',
+        back_populates='managed_by',
+        primaryjoin='User.id == License.manager_id',
     )
