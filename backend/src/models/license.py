@@ -15,9 +15,11 @@ class License:
     # campos
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     assigned_to_id: Mapped[int] = mapped_column(
-        ForeignKey('users.id'), nullable=True)
+        ForeignKey('users.id'), nullable=True
+    )
     manager_id: Mapped[int] = mapped_column(
-        ForeignKey('users.id'), nullable=True)
+        ForeignKey('users.id'), nullable=True
+    )
     software_name: Mapped[str]
     license_type: Mapped[str]
     status: Mapped[str]
@@ -46,4 +48,8 @@ class License:
     )
     managed_by = relationship(
         'User', back_populates='managed_licenses', foreign_keys=[manager_id]
+    )
+    requests = relationship('RenewalRequest', back_populates='request_license')
+    notifications = relationship(
+        'Notification', back_populates='about_license'
     )

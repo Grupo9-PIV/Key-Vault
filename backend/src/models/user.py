@@ -16,7 +16,7 @@ class User:
     password_hash: Mapped[str]
     name: Mapped[str]
     role: Mapped[str]
-    department: Mapped[str]
+    department: Mapped[str] = mapped_column(nullable=True)
     is_first_login: Mapped[bool] = mapped_column(
         init=False, server_default=text('true')
     )
@@ -40,3 +40,17 @@ class User:
         back_populates='managed_by',
         primaryjoin='User.id == License.manager_id',
     )
+    requests = relationship(
+        'RenewalRequest',
+        back_populates='requested_by',
+        primaryjoin='User.id == RenewalRequest.requested_by_id',
+    )
+    managed_requests = relationship(
+        'RenewalRequest',
+        back_populates='managed_by',
+        primaryjoin='User.id == RenewalRequest.manager_id',
+    )
+    notifications = relationship(
+        'Notification', back_populates='recipient_user'
+    )
+    audit_logs = relationship('AuditLog', back_populates='performed_by')
