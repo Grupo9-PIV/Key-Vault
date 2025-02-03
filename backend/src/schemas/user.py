@@ -1,12 +1,6 @@
-from enum import Enum
-
 from pydantic import BaseModel, EmailStr
 
-
-class UserRole(str, Enum):
-    admin = 'admin'
-    user = 'user'
-    manager = 'manager'
+from src.enums import UserRole
 
 
 class UserSchema(BaseModel):
