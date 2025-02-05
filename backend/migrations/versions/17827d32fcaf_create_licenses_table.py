@@ -39,8 +39,8 @@ def upgrade() -> None:
     sa.Column('subscription_plan', sa.String(), nullable=True),
     sa.Column('conditions', sa.Text(), nullable=True),
     sa.Column('priority', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['assigned_to_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['manager_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['assigned_to_id'], ['users.id'], name='fk_licenses_assigned_to_id'),
+    sa.ForeignKeyConstraint(['manager_id'], ['users.id'], name='fk_licenses_manager_id'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

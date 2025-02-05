@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('entity', sa.String(), nullable=False),
     sa.Column('action', sa.String(), nullable=False),
     sa.Column('timestamp', sa.TIMESTAMP(timezone=True), nullable=True),
-    sa.ForeignKeyConstraint(['performed_by_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['performed_by_id'], ['users.id'], name='fk_audit_logs_performed_by_id'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('renewal_requests',
@@ -40,9 +40,9 @@ def upgrade() -> None:
     sa.Column('status', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['license_id'], ['licenses.id'], ),
-    sa.ForeignKeyConstraint(['manager_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['requested_by_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['license_id'], ['licenses.id'], name='fk_renewal_requests_license_id'),
+    sa.ForeignKeyConstraint(['manager_id'], ['users.id'], name='fk_renewal_requests_manager_id'),
+    sa.ForeignKeyConstraint(['requested_by_id'], ['users.id'], name='fk_renewal_requests_requested_by_id'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('notifications',
@@ -53,9 +53,9 @@ def upgrade() -> None:
     sa.Column('message', sa.Text(), nullable=False),
     sa.Column('is_read', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
-    sa.ForeignKeyConstraint(['license_id'], ['licenses.id'], ),
-    sa.ForeignKeyConstraint(['request_id'], ['renewal_requests.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['license_id'], ['licenses.id'], name='fk_notifications_license_id'),
+    sa.ForeignKeyConstraint(['request_id'], ['renewal_requests.id'], name='fk_notifications_request_id'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='fk_notifications_user_id'),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('users', schema=None) as batch_op:
