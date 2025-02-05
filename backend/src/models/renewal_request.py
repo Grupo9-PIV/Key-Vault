@@ -14,9 +14,30 @@ class RenewalRequest:
 
     # campos
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
-    license_id: Mapped[int] = mapped_column(ForeignKey('licenses.id'))
-    requested_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    manager_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    license_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            'licenses.id',
+            name='fk_renewal_requests_license_id',
+            ondelete='SET NULL'
+        ),
+        nullable=True
+    )
+    requested_by_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            'users.id',
+            name='fk_renewal_requests_requested_by_id',
+            ondelete='SET NULL'
+        ),
+        nullable=True,
+    )
+    manager_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            'users.id',
+            name='fk_renewal_requests_manager_id',
+            ondelete='SET NULL'
+        ),
+        nullable=True,
+    )
     reason: Mapped[str] = mapped_column(Text, nullable=True)
     feedback: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(default=DEFAULT_STATUS)
@@ -38,5 +59,7 @@ class RenewalRequest:
         'User', back_populates='managed_requests', foreign_keys=[manager_id]
     )
     notifications = relationship(
-        'Notification', back_populates='about_request'
+        'Notification',
+        back_populates='about_request',
+        cascade='all, delete-orphan',
     )

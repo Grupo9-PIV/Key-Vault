@@ -15,17 +15,27 @@ class License:
     # campos
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     assigned_to_id: Mapped[int] = mapped_column(
-        ForeignKey('users.id'), nullable=True
+        ForeignKey(
+            'users.id',
+            name='fk_licenses_assigned_to_id',
+            ondelete='SET NULL'
+        ),
+        nullable=True
     )
     manager_id: Mapped[int] = mapped_column(
-        ForeignKey('users.id'), nullable=True
+        ForeignKey(
+            'users.id',
+            name='fk_licenses_manager_id',
+            ondelete='SET NULL'
+        ),
+        nullable=True
     )
     software_name: Mapped[str]
     license_type: Mapped[str]
     status: Mapped[str]
     developed_by: Mapped[str]
     version: Mapped[str] = mapped_column(nullable=True)
-    purchase_date: Mapped[datetime]
+    purchase_date: Mapped[datetime] = mapped_column(server_default=func.now())
     start_date: Mapped[datetime]
     end_date: Mapped[datetime]
     created_at: Mapped[datetime] = mapped_column(
@@ -49,7 +59,14 @@ class License:
     managed_by = relationship(
         'User', back_populates='managed_licenses', foreign_keys=[manager_id]
     )
-    requests = relationship('RenewalRequest', back_populates='request_license')
+    requests = relationship(
+        'RenewalRequest',
+        back_populates='request_license',
+        cascade='save-update',
+        passive_deletes=True,
+    )
     notifications = relationship(
-        'Notification', back_populates='about_license'
+        'Notification',
+        back_populates='about_license',
+        cascade='all, delete-orphan',
     )

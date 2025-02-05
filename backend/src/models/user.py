@@ -34,23 +34,32 @@ class User:
         'License',
         back_populates='assigned_to',
         primaryjoin='User.id == License.assigned_to_id',
+        cascade='save-update',
+        passive_deletes=True,
     )
     managed_licenses = relationship(
         'License',
         back_populates='managed_by',
         primaryjoin='User.id == License.manager_id',
+        cascade='save-update',
+        passive_deletes=True,
     )
     requests = relationship(
         'RenewalRequest',
         back_populates='requested_by',
         primaryjoin='User.id == RenewalRequest.requested_by_id',
+        cascade='save-update',
+        passive_deletes=True,
     )
     managed_requests = relationship(
         'RenewalRequest',
         back_populates='managed_by',
         primaryjoin='User.id == RenewalRequest.manager_id',
+        cascade='save-update',
+        passive_deletes=True,
     )
     notifications = relationship(
-        'Notification', back_populates='recipient_user'
+        'Notification',
+        back_populates='recipient_user',
+        cascade='all, delete-orphan',
     )
-    audit_logs = relationship('AuditLog', back_populates='performed_by')

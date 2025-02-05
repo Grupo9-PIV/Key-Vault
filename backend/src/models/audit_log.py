@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import TIMESTAMP, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import TIMESTAMP, func
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database import table_registry
 
@@ -12,15 +12,13 @@ class AuditLog:
 
     # campos
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
-    performed_by_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    performed_by_id: Mapped[int]
     entity_id: Mapped[int]
     entity: Mapped[str]
     action: Mapped[str]
     timestamp: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True),
-        nullable=True,
-        onupdate=func.now(),
+        init=False,
+        nullable=False,
+        server_default=func.now(),
     )
-
-    # relacionamentos
-    performed_by = relationship('User', back_populates='audit_logs')
