@@ -3,12 +3,19 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from src.models import User
-from tests.helpers import add_user
+from src.models import License, User
 
 
 def test_create_user(session: Session) -> None:
-    add_user(session)
+    user = User(
+        email='teste@teste.com',
+        password_hash='12345678',
+        name='Teste',
+        role='admin',
+        department='Teste',
+    )
+    session.add(user)
+    session.commit()
 
     result = session.scalar(
         select(User).where(User.email == 'teste@teste.com')
@@ -18,48 +25,38 @@ def test_create_user(session: Session) -> None:
     assert result.email == 'teste@teste.com'
 
 
-def test_delete_user(session_with_user: Session) -> None:
-    user = session_with_user.scalar(
-        select(User).where(User.email == 'teste@teste.com')
-    )
-    assert user is not None
+def test_delete_user(session: Session, user: User) -> None:
+    session.delete(user)
+    session.commit()
 
-    session_with_user.delete(user)
-    session_with_user.commit()
-
-    result = session_with_user.scalar(
-        select(User).where(User.email == 'teste@teste.com')
-    )
-    assert result is None
+    deleted_user = session.scalar(select(User).where(User.id == user.id))
+    assert deleted_user is None
 
 
-def test_update_user(session_with_user: Session) -> None:
-    user = session_with_user.scalar(select(User).where(User.id == 1))
-    assert user is not None
-
+def test_update_user(session: Session, user: User) -> None:
     user.name = 'Teste Update'
-    session_with_user.commit()
-    session_with_user.refresh(user)
+    user.role = 'manager'
+    session.commit()
+    session.refresh(user)
 
-    updated_user = session_with_user.scalar(
-        select(User).where(User.email == 'teste@teste.com')
-    )
+    updated_user = session.scalar(select(User).where(User.id == user.id))
     assert updated_user.name == 'Teste Update'
+    assert updated_user.role == 'manager'
     assert updated_user.updated_at is not None
 
 
-def test_email_unique_constraint(session_with_user: Session) -> None:
+def test_email_unique_constraint(session: Session, user: User) -> None:
     user2 = User(
-        email='teste@teste.com',  # email já existente
+        email=user.email,  # email já existente
         password_hash='12345',
         name='Teste 2',
         role='user',
         department='Teste',
     )
-    session_with_user.add(user2)
+    session.add(user2)
 
     with pytest.raises(IntegrityError):
-        session_with_user.commit()
+        session.commit()
 
 
 def test_missing_required_fields(session: Session) -> None:
@@ -72,5 +69,33 @@ def test_missing_required_fields(session: Session) -> None:
     )
     session.add(user)
 
-    with pytest.raises(IntegrityError):
+    with pytest.raises(IntegrityError) as exc_info:
         session.commit()
+    assert 'NOT NULL constraint failed' in str(exc_info.value)
+
+
+def test_delete_user_with_license(
+    session: Session, user: User, mock_license: License
+) -> None:
+    assert mock_license.assigned_to == user
+
+    session.delete(user)
+    session.commit()
+    session.refresh(mock_license)
+
+    assert mock_license.assigned_to is None
+    assert mock_license.assigned_to_id is None
+
+
+def test_user_license_relationship(user: User, mock_license: License) -> None:
+    assert mock_license in user.licenses
+    assert mock_license.assigned_to == user
+
+
+def test_updated_at_auto_update(session: Session, user: User) -> None:
+    original_updated_at = user.updated_at
+    user.name = 'Updated Name'
+    session.commit()
+    session.refresh(user)
+
+    assert user.updated_at != original_updated_at
