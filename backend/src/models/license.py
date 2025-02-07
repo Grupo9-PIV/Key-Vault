@@ -16,19 +16,15 @@ class License:
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     assigned_to_id: Mapped[int] = mapped_column(
         ForeignKey(
-            'users.id',
-            name='fk_licenses_assigned_to_id',
-            ondelete='SET NULL'
+            'users.id', name='fk_licenses_assigned_to_id', ondelete='SET NULL'
         ),
-        nullable=True
+        nullable=True,
     )
     manager_id: Mapped[int] = mapped_column(
         ForeignKey(
-            'users.id',
-            name='fk_licenses_manager_id',
-            ondelete='SET NULL'
+            'users.id', name='fk_licenses_manager_id', ondelete='SET NULL'
         ),
-        nullable=True
+        nullable=True,
     )
     software_name: Mapped[str]
     license_type: Mapped[str]

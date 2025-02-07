@@ -18,15 +18,15 @@ class RenewalRequest:
         ForeignKey(
             'licenses.id',
             name='fk_renewal_requests_license_id',
-            ondelete='SET NULL'
+            ondelete='SET NULL',
         ),
-        nullable=True
+        nullable=True,
     )
     requested_by_id: Mapped[int] = mapped_column(
         ForeignKey(
             'users.id',
             name='fk_renewal_requests_requested_by_id',
-            ondelete='SET NULL'
+            ondelete='SET NULL',
         ),
         nullable=True,
     )
@@ -34,7 +34,7 @@ class RenewalRequest:
         ForeignKey(
             'users.id',
             name='fk_renewal_requests_manager_id',
-            ondelete='SET NULL'
+            ondelete='SET NULL',
         ),
         nullable=True,
     )

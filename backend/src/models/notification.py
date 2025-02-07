@@ -14,26 +14,24 @@ class Notification:
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     user_id: Mapped[int] = mapped_column(
         ForeignKey(
-            'users.id',
-            name='fk_notifications_user_id',
-            ondelete='CASCADE'
+            'users.id', name='fk_notifications_user_id', ondelete='CASCADE'
         )
     )
     license_id: Mapped[int] = mapped_column(
         ForeignKey(
             'licenses.id',
             name='fk_notifications_license_id',
-            ondelete='CASCADE'
+            ondelete='CASCADE',
         ),
-        nullable=True
+        nullable=True,
     )
     request_id: Mapped[int] = mapped_column(
         ForeignKey(
             'renewal_requests.id',
             name='fk_notifications_request_id',
-            ondelete='CASCADE'
+            ondelete='CASCADE',
         ),
-        nullable=True
+        nullable=True,
     )
     message: Mapped[str] = mapped_column(Text)
     is_read: Mapped[bool] = mapped_column(
