@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from src.app import app
 from src.database import table_registry
-from src.models import License, Notification, RenewalRequest, User
+from src.models import AuditLog, License, Notification, RenewalRequest, User
 
 
 @pytest.fixture
@@ -106,3 +106,17 @@ def renewal_request(
     session.add(renewal_request)
     session.commit()
     return renewal_request
+
+
+@pytest.fixture
+def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
+    audit_log = AuditLog(
+        performed_by_id=user.id,
+        entity_id=mock_license.id,
+        entity=type(mock_license).__name__,
+        action='delete',
+    )
+
+    session.add(audit_log)
+    session.commit()
+    return audit_log
