@@ -63,6 +63,8 @@ def user(session: Session) -> User:
     )
     session.add(user)
     session.commit()
+    session.refresh(user)
+
     return user
 
 
@@ -86,6 +88,7 @@ def mock_license(session: Session, user: User) -> License:
     )
     session.add(mock_license)
     session.commit()
+
     return mock_license
 
 
@@ -99,6 +102,7 @@ def notification(session: Session, user: User) -> Notification:
     )
     session.add(notification)
     session.commit()
+
     return notification
 
 
@@ -117,6 +121,7 @@ def renewal_request(
 
     session.add(renewal_request)
     session.commit()
+
     return renewal_request
 
 
@@ -131,4 +136,5 @@ def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
 
     session.add(audit_log)
     session.commit()
+
     return audit_log
