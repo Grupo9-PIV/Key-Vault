@@ -5,20 +5,20 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 
 from src.app import app
-from src.database import table_registry
+from src.database import get_session, table_registry
 from src.models import AuditLog, License, Notification, RenewalRequest, User
 
 
 @pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
-
-
-@pytest.fixture
-def engine():
-    engine = create_engine('sqlite:///:memory:')
+def engine() -> Generator[Engine, None, None]:
+    engine = create_engine(
+        'sqlite:///:memory:',
+        connect_args={'check_same_thread': False},
+        poolclass=StaticPool,
+    )
 
     # garante que a feature de foreign keys esteja ativada no sqlite
     @event.listens_for(engine, 'connect')
@@ -38,6 +38,18 @@ def engine():
 def session(engine: Engine) -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
+
+
+@pytest.fixture
+def client(session: Session) -> Generator[TestClient, None, None]:
+    def get_test_session() -> Session:
+        return session
+
+    with TestClient(app) as client:
+        app.dependency_overrides[get_session] = get_test_session
+        yield client
+
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
