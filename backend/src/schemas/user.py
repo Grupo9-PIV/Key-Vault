@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from src.enums import UserRole
 
@@ -16,6 +16,8 @@ class UserPublic(BaseModel):
     name: str
     email: EmailStr
     role: UserRole
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserList(BaseModel):
