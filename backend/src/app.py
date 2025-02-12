@@ -2,11 +2,10 @@ from http import HTTPStatus
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import select
 
 from src.database import get_session
-from src.models import User
 from src.schemas import UserList, UserPublic, UserSchema
+from src.services import UserService
 
 app = FastAPI()
 
@@ -18,36 +17,19 @@ def read_root():
 
 @app.post('/users', status_code=HTTPStatus.CREATED, response_model=UserPublic)
 def create_user(user: UserSchema, session: Session = Depends(get_session)):
-    db_user = session.scalar(select(User).where(User.email == user.email))
-
-    if db_user:
-        raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail='Email already exists',
-        )
-
-    new_user = User(
-        email=user.email,
-        password_hash=user.password,
-        name=user.name,
-        role=user.role,
-        department=user.department,
-    )
-
-    session.add(new_user)
-    session.commit()
-    session.refresh(new_user)
-
-    return new_user
+    try:
+        new_user = UserService.create_user(session, user)
+        return new_user
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e))
 
 
 @app.get('/users', status_code=HTTPStatus.OK, response_model=UserList)
 def read_users(
-        limit: int = 10,
-        skip: int = 0,
-        session: Session = Depends(get_session)
+    limit: int = 10, skip: int = 0, session: Session = Depends(get_session)
 ):
-    users = session.scalars(select(User).offset(skip).limit(limit))
+    users = UserService.get_users(session, skip, limit)
+
     return {'users': users}
 
 
@@ -55,17 +37,11 @@ def read_users(
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
 def read_user(user_id: int, session: Session = Depends(get_session)):
-    user = session.scalar(
-        select(User).where(User.id == user_id)
-    )
-
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='User does not exist in database'
-        )
-
-    return user
+    try:
+        user = UserService.get_user(session, user_id)
+        return user
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e))
 
 
 @app.put(
@@ -74,43 +50,19 @@ def read_user(user_id: int, session: Session = Depends(get_session)):
 def update_user(
     user_id: int, user: UserSchema, session: Session = Depends(get_session)
 ):
-    db_user = session.scalar(
-        select(User).where(User.id == user_id)
-    )
-
-    if not db_user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='User does not exist in database'
-        )
-
-    db_user.email = user.email
-    db_user.password_hash = user.password
-    db_user.name = user.name
-    db_user.role = user.role
-    db_user.department = user.department
-
-    session.commit()
-    session.refresh(db_user)
-
-    return db_user
+    try:
+        updated_user = UserService.update_user(session, user_id, user)
+        return updated_user
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e))
 
 
 @app.delete(
     '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
 )
 def delete_user(user_id: int, session: Session = Depends(get_session)):
-    user = session.scalar(
-        select(User).where(User.id == user_id)
-    )
-
-    if not user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='User does not exist in database'
-        )
-
-    session.delete(user)
-    session.commit()
-
-    return user
+    try:
+        deleted_user = UserService.delete_user(session, user_id)
+        return deleted_user
+    except ValueError as e:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e))
