@@ -3,6 +3,7 @@ from sqlalchemy.sql import select
 
 from src.models import User
 from src.schemas import UserSchema
+from src.security import get_password_hash
 
 
 class UserService:
@@ -14,7 +15,7 @@ class UserService:
 
         new_user = User(
             email=user.email,
-            password_hash=user.password,  # TODO: trocar p/ hash
+            password_hash=get_password_hash(user.password),
             name=user.name,
             role=user.role,
             department=user.department,
@@ -49,7 +50,7 @@ class UserService:
             raise ValueError('User not found')
 
         user.email = user_data.email
-        user.password_hash = user_data.password  # TODO: trocar p/ hash tbm
+        user.password_hash = get_password_hash(user_data.password)
         user.name = user_data.name
         user.role = user_data.role
         user.department = user_data.department

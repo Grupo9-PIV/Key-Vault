@@ -10,6 +10,7 @@ from sqlalchemy.pool import StaticPool
 from src.app import app
 from src.database import get_session, table_registry
 from src.models import AuditLog, License, Notification, RenewalRequest, User
+from src.security import get_password_hash
 
 
 @pytest.fixture
@@ -54,9 +55,11 @@ def client(session: Session) -> Generator[TestClient, None, None]:
 
 @pytest.fixture
 def user(session: Session) -> User:
+    plain_password = '12345678'
+
     user = User(
         email='teste@teste.com',
-        password_hash='12345678',
+        password_hash=get_password_hash(plain_password),
         name='Teste',
         role='admin',
         department='Teste',
@@ -64,6 +67,8 @@ def user(session: Session) -> User:
     session.add(user)
     session.commit()
     session.refresh(user)
+
+    user.password = plain_password
 
     return user
 

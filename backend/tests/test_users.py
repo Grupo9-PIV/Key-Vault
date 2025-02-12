@@ -6,6 +6,7 @@ from sqlalchemy.sql import select
 
 from src.models import User
 from src.schemas import UserPublic
+from src.security import verify_password
 
 
 def test_create_user_valid(client: TestClient, session: Session) -> None:
@@ -26,6 +27,7 @@ def test_create_user_valid(client: TestClient, session: Session) -> None:
 
     assert response.status_code == HTTPStatus.CREATED
     assert data['email'] == user_data['email']
+    assert verify_password(user_data['password'], db_user.password_hash)
     assert 'id' in data
 
     assert db_user is not None
@@ -111,6 +113,7 @@ def test_update_user_existing(
     assert updated_user.updated_at is not None
     assert updated_user.email == user_data['email']
     assert updated_user.role == user_data['role']
+    assert verify_password(user_data['password'], updated_user.password_hash)
 
 
 def test_update_user_not_found(client: TestClient) -> None:
