@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, CORSMiddleware
 from sqlalchemy.orm import Session
 
 from src.database import get_session
@@ -66,3 +66,12 @@ def delete_user(user_id: int, session: Session = Depends(get_session)):
         return deleted_user
     except ValueError as e:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e))
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite requisições de qualquer origem
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos os métodos 
+    allow_headers=["*"],  # Permite todos os cabeçalhos
+)
