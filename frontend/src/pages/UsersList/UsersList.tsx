@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
 interface User {
   id: number;
   name: string;
@@ -43,7 +42,9 @@ const UserList = () => {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.name}</td>
+              <td>
+                <a href={`/users/${user.id}`}>{user.name}</a>
+              </td>
               <td>{user.email}</td>
               <td>{user.role}</td>
             </tr>
