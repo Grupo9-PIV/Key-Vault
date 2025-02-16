@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+
 const UsersDetail = () => {
+
+  useEffect(() => {
+      document.title = "Detalhes dos Usuários"; 
+    }, []);    
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,6 +37,7 @@ const UsersDetail = () => {
 
   return (
     <div>
+      <Header />
       <h2>Detalhes do Usuário</h2>
       <p><strong>ID:</strong> {user.id}</p>
       <p><strong>Nome:</strong> {user.name}</p>
@@ -37,6 +48,7 @@ const UsersDetail = () => {
 
       {/* Link para a página CRUD (substituir # pelo caminho correto depois) */}
       <p><a href="#">Gerenciar Usuário (CRUD)</a></p>
+      <Footer />
     </div>
   );
 };

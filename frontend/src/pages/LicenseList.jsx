@@ -1,6 +1,11 @@
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import "./LicenseList.css";
+
+import "../styles/LicenseList.css";
+
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 
 const licensesMock = [
   {
@@ -48,6 +53,10 @@ const licensesMock = [
 const LicenseList = () => {
   const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    document.title = "Lista de Licenças"; 
+  }, []);
+
   const filteredLicenses = licensesMock
     .filter((license) =>
       license.software_name.toLowerCase().includes(search.toLowerCase())
@@ -56,6 +65,7 @@ const LicenseList = () => {
 
   return (
     <div className="license-container">
+      <Header />
       <h2>Lista de Licenças</h2>
 
       {/* Campo de pesquisa */}
@@ -98,6 +108,7 @@ const LicenseList = () => {
           ))}
         </tbody>
       </table>
+      <Footer />    
     </div>
   );
 };

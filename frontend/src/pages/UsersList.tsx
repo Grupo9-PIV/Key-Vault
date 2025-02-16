@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 
+
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+
+
 interface User {
   id: number;
   name: string;
@@ -8,6 +14,11 @@ interface User {
 }
 
 const UserList = () => {
+
+  useEffect(() => {
+      document.title = "Lista de Usuários"; 
+    }, []);
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,6 +39,7 @@ const UserList = () => {
 
   return (
     <div>
+      <Header />
       <h2>Lista de Usuários</h2>
       <table>
         <thead>
@@ -51,6 +63,7 @@ const UserList = () => {
           ))}
         </tbody>
       </table>
+      <Footer />
     </div>
   );
 };

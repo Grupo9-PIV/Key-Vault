@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 
+
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+
 const Notifications = () => {
+
+  useEffect(() => {
+      document.title = "Notificações"; 
+    }, []);
+
+
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,6 +46,7 @@ const Notifications = () => {
 
   return (
     <div>
+      <Header />
       <h2>Notificações</h2>
       <ul>
         {notifications.map((notif) => (
@@ -47,6 +59,7 @@ const Notifications = () => {
           </li>
         ))}
       </ul>
+      <Footer />
     </div>
   );
 };
