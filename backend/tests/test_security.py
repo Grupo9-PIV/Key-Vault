@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from jwt import decode
 
 from src.security import create_access_token
-from src.security.jwt import ALGORITHM, SECRET_KEY
+from src.security.auth import ALGORITHM, SECRET_KEY
 
 
 def test_create_access_token() -> None:
