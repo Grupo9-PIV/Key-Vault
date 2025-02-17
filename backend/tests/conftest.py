@@ -61,7 +61,7 @@ def user(session: Session) -> User:
         email='teste@teste.com',
         password_hash=get_password_hash(plain_password),
         name='Teste',
-        role='admin',
+        role='user',
         department='Teste',
     )
     session.add(user)
@@ -71,6 +71,26 @@ def user(session: Session) -> User:
     user.password = plain_password
 
     return user
+
+
+@pytest.fixture
+def admin(session: Session) -> User:
+    plain_password = '12345678'
+
+    admin_user = User(
+        email='admin@admin.com',
+        password_hash=get_password_hash(plain_password),
+        name='Admin',
+        role='admin',
+        department='Admin',
+    )
+    session.add(admin_user)
+    session.commit()
+    session.refresh(admin_user)
+
+    admin_user.password = plain_password
+
+    return admin_user
 
 
 @pytest.fixture
@@ -143,3 +163,23 @@ def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
     session.commit()
 
     return audit_log
+
+
+@pytest.fixture
+def token(client, user) -> str:
+    response = client.post(
+        '/token',
+        data={'username': user.email, 'password': user.password},
+    )
+
+    return response.json()['access_token']
+
+
+@pytest.fixture
+def adm_token(client, admin) -> str:
+    response = client.post(
+        '/token',
+        data={'username': admin.email, 'password': admin.password},
+    )
+
+    return response.json()['access_token']
