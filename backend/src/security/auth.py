@@ -11,13 +11,9 @@ from zoneinfo import ZoneInfo
 from src.database import get_session
 from src.exceptions import CredentialsException
 from src.models import User
-from src.settings import Settings
+from src.settings import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 
-SECRET_KEY = Settings().SECRET_KEY
-ALGORITHM = Settings().ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = Settings().ACCESS_TOKEN_EXPIRE_MINUTES
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
 def create_access_token(data: dict) -> str:
