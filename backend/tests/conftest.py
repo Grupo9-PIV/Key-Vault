@@ -168,7 +168,7 @@ def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
 @pytest.fixture
 def token(client, user) -> str:
     response = client.post(
-        '/token',
+        '/auth/token',
         data={'username': user.email, 'password': user.password},
     )
 
@@ -178,7 +178,7 @@ def token(client, user) -> str:
 @pytest.fixture
 def adm_token(client, admin) -> str:
     response = client.post(
-        '/token',
+        '/auth/token',
         data={'username': admin.email, 'password': admin.password},
     )
 

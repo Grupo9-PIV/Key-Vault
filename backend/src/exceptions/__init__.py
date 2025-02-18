@@ -15,7 +15,7 @@ class UserNotFoundException(AppException):
 
 class PermissionDeniedException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.FORBIDDEN, 'Not enough permission')
+        super().__init__(HTTPStatus.FORBIDDEN, 'Not enough permissions')
 
 
 class EmailAlreadyExistsException(AppException):
@@ -29,3 +29,12 @@ class CredentialsException(AppException):
             HTTPStatus.UNAUTHORIZED, 'Could not validate credentials'
         )
         self.headers = {'WWW-Authenticate': 'Bearer'}
+
+
+__all__ = [
+    'AppException',
+    'UserNotFoundException',
+    'PermissionDeniedException',
+    'EmailAlreadyExistsException',
+    'CredentialsException',
+]
