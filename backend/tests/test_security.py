@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from jwt import decode
 
 from src.security import create_access_token
-from src.security.auth import ALGORITHM, SECRET_KEY
+from src.settings import ALGORITHM, SECRET_KEY
 
 
 def test_create_access_token() -> None:

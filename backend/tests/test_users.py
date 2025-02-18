@@ -154,7 +154,7 @@ def test_update_user_forbidden(
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN
-    assert response.json()['detail'] == 'Not enough permission'
+    assert response.json()['detail'] == 'Not enough permissions'
 
 
 def test_update_not_found(client: TestClient, adm_token: str) -> None:
@@ -199,7 +199,7 @@ def test_delete_user_forbidden(
     )
 
     assert response.status_code == HTTPStatus.FORBIDDEN
-    assert response.json()['detail'] == 'Not enough permission'
+    assert response.json()['detail'] == 'Not enough permissions'
 
 
 def test_delete_not_found(client: TestClient, adm_token: str) -> None:

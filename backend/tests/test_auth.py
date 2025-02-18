@@ -7,7 +7,7 @@ from src.models import User
 
 def test_get_token(client: TestClient, user: User) -> None:
     response = client.post(
-        '/token', data={'username': user.email, 'password': user.password}
+        '/auth/token', data={'username': user.email, 'password': user.password}
     )
 
     token = response.json()
@@ -19,7 +19,8 @@ def test_get_token(client: TestClient, user: User) -> None:
 
 def test_get_token_bad_request(client: TestClient, user: User) -> None:
     response = client.post(
-        '/token', data={'username': user.email, 'password': 'wrong-password'}
+        '/auth/token',
+        data={'username': user.email, 'password': 'wrong-password'},
     )
 
     result = response.json()
