@@ -5,20 +5,21 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 
 from src.app import app
-from src.database import table_registry
+from src.database import get_session, table_registry
 from src.models import AuditLog, License, Notification, RenewalRequest, User
+from src.security import get_password_hash
 
 
 @pytest.fixture
-def client() -> TestClient:
-    return TestClient(app)
-
-
-@pytest.fixture
-def engine():
-    engine = create_engine('sqlite:///:memory:')
+def engine() -> Generator[Engine, None, None]:
+    engine = create_engine(
+        'sqlite:///:memory:',
+        connect_args={'check_same_thread': False},
+        poolclass=StaticPool,
+    )
 
     # garante que a feature de foreign keys esteja ativada no sqlite
     @event.listens_for(engine, 'connect')
@@ -41,17 +42,55 @@ def session(engine: Engine) -> Generator[Session, None, None]:
 
 
 @pytest.fixture
+def client(session: Session) -> Generator[TestClient, None, None]:
+    def get_test_session() -> Session:
+        return session
+
+    with TestClient(app) as client:
+        app.dependency_overrides[get_session] = get_test_session
+        yield client
+
+    app.dependency_overrides.clear()
+
+
+@pytest.fixture
 def user(session: Session) -> User:
+    plain_password = '12345678'
+
     user = User(
         email='teste@teste.com',
-        password_hash='12345678',
+        password_hash=get_password_hash(plain_password),
         name='Teste',
-        role='admin',
+        role='user',
         department='Teste',
     )
     session.add(user)
     session.commit()
+    session.refresh(user)
+
+    user.password = plain_password
+
     return user
+
+
+@pytest.fixture
+def admin(session: Session) -> User:
+    plain_password = '12345678'
+
+    admin_user = User(
+        email='admin@admin.com',
+        password_hash=get_password_hash(plain_password),
+        name='Admin',
+        role='admin',
+        department='Admin',
+    )
+    session.add(admin_user)
+    session.commit()
+    session.refresh(admin_user)
+
+    admin_user.password = plain_password
+
+    return admin_user
 
 
 @pytest.fixture
@@ -74,6 +113,7 @@ def mock_license(session: Session, user: User) -> License:
     )
     session.add(mock_license)
     session.commit()
+
     return mock_license
 
 
@@ -87,6 +127,7 @@ def notification(session: Session, user: User) -> Notification:
     )
     session.add(notification)
     session.commit()
+
     return notification
 
 
@@ -105,6 +146,7 @@ def renewal_request(
 
     session.add(renewal_request)
     session.commit()
+
     return renewal_request
 
 
@@ -119,4 +161,25 @@ def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
 
     session.add(audit_log)
     session.commit()
+
     return audit_log
+
+
+@pytest.fixture
+def token(client, user) -> str:
+    response = client.post(
+        '/auth/token',
+        data={'username': user.email, 'password': user.password},
+    )
+
+    return response.json()['access_token']
+
+
+@pytest.fixture
+def adm_token(client, admin) -> str:
+    response = client.post(
+        '/auth/token',
+        data={'username': admin.email, 'password': admin.password},
+    )
+
+    return response.json()['access_token']
