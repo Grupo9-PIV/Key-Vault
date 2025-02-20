@@ -1,6 +1,9 @@
 from http import HTTPStatus
 
 from fastapi import HTTPException
+from .license_exceptions import LicenseCodeAlreadyExistsException #para a exceção
+
+__all__ = ['LicenseCodeAlreadyExistsException']
 
 
 class AppException(HTTPException):
