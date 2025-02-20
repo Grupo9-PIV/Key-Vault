@@ -1,0 +1,136 @@
+/* Made with love by Mutiullah Samim*/
+
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html,body {
+   
+    background-color: rgba(149, 179, 235, 0.2);   
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    font-family: 'Numans', sans-serif;
+
+}
+
+body .img-fundo{
+    width: 100%;
+    z-index: 0;
+}
+.container{
+    height: 100%;
+    align-content: center;
+}
+
+.card{
+height: 95%;
+margin-top: auto;
+margin-bottom: auto;
+width: 400px;
+background-color: rgba(39, 35, 35, 0.6) !important;
+}
+.card-footer{
+    padding: 15px;
+    max-width: 100%;
+}
+
+.card .img{
+    width: 380px;
+    border-radius: 5px;
+    max-width: 100%;
+    margin-top: 10px;
+  
+    
+}
+
+.social_icon span{
+font-size: 60px;
+margin-left: 10px;
+color: #FFC312;
+}
+
+.social_icon span:hover{
+color: white;
+cursor: pointer;
+}
+
+.card-header h2{
+    color: white;
+    text-transform: uppercase;
+}
+
+.input-form-control{
+    width: 55vh;
+    margin-left: .45rem;
+    margin-top: 1rem; 
+}
+
+.form-save{
+    width: 55vh;
+    margin-left: .45rem;
+    margin-top: 2rem;   
+}
+
+.form-group{
+    margin-top: 2rem;   
+}
+
+.subtitle img{    
+    padding: 2rem;
+}
+
+.social_icon{
+position: absolute;
+right: 20px;
+top: -45px;
+}
+
+
+.input-group-prepend span{
+width: 50px;
+background-color: #456cec;
+align-items: center;
+color: black;
+border:0 !important;
+}
+
+input:focus{
+outline: 0 0 0 0  !important;
+box-shadow: 0 0 0 0 !important;
+
+}
+
+.remember{
+color: white;
+}
+
+.remember input
+{
+width: 20px;
+height: 20px;
+margin-left: 15px;
+margin-right: 5px;
+}
+
+.login_btn{
+margin-top: 10px;
+font-size: 16px;
+text-transform: uppercase;
+color: white;
+background-color: #456cec;
+align-items: center;
+width: 100%;
+}
+
+.login_btn:hover{
+color: black;
+background-color: white;
+}
+
+.links{
+color: white;
+}
+
+.links a{
+margin-left: 4px;
+}
+
