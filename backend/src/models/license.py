@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Text, func
+from sqlalchemy import Enum, ForeignKey, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import table_registry
+from src.enums import LicensePriority, LicenseStatus, LicenseType
 
-DEFAULT_PRIORITY = 'média'
+DEFAULT_PRIORITY = LicensePriority.MEDIA
 
 
 @table_registry.mapped_as_dataclass
@@ -27,8 +28,8 @@ class License:
         nullable=True,
     )
     software_name: Mapped[str]
-    license_type: Mapped[str]
-    status: Mapped[str]
+    license_type: Mapped[LicenseType] = mapped_column(Enum(LicenseType))
+    status: Mapped[LicenseStatus] = mapped_column(Enum(LicenseStatus))
     developed_by: Mapped[str]
     version: Mapped[str] = mapped_column(nullable=True)
     purchase_date: Mapped[datetime] = mapped_column(server_default=func.now())
@@ -46,7 +47,9 @@ class License:
     current_usage: Mapped[int] = mapped_column(nullable=True)
     subscription_plan: Mapped[str] = mapped_column(nullable=True)
     conditions: Mapped[str] = mapped_column(Text, nullable=True)
-    priority: Mapped[str] = mapped_column(default=DEFAULT_PRIORITY)
+    priority: Mapped[LicensePriority] = mapped_column(
+        Enum(LicenseType), default=DEFAULT_PRIORITY
+    )
 
     # relacionamentos
     assigned_to = relationship(
