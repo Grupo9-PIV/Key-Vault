@@ -18,6 +18,7 @@ class UserPublic(BaseModel):
     name: str
     email: EmailStr
     role: UserRole
+    department: str
 
     model_config = ConfigDict(from_attributes=True)
 
