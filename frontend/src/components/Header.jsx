@@ -11,7 +11,6 @@ const Header = () => {
     <header class="p-3 mb-3 border-bottom">
       <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          
           <Link class="nav-link px-2 link-body-emphasis" to="#">
             <img src="././public/logo.png" alt="Logo" width="130" height="auto" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" />
           </Link>
@@ -21,13 +20,11 @@ const Header = () => {
             <li><Link class="nav-link px-2 link-body-emphasis" to="/licenses">Licenças</Link></li>
             <li><Link class="nav-link px-2 link-body-emphasis" to="/renewals">Renovações</Link></li>
           </ul>
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
             <li class="me-3">
               <Link class="nav-link px-2 link-body-emphasis position-relative" to="/notifications">
                 <img src="././public/sino.png" alt="Sino" width="25" height="25" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" />
-                <span class="position-absolute top-0
-
-               start-100 translate-middle badge rounded-pill bg-danger">3
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3
                   <span class="visually-hidden">Notificações não lidas</span>
                 </span>
               </Link>
@@ -45,34 +42,9 @@ const Header = () => {
               </div>
             </li>
           </ul>
-
         </div>
       </div>
     </header>
-    //<header style={headerStyle}>
-    //  <div style={logoStyle}>
-    //    <h1>Logo da Empresa</h1>
-    //  </div>
-    //  <nav style={navStyle}>
-    //    <ul style={navListStyle}>
-    //      <li>
-    //        <Link style={linkStyle} to="/initial">Home</Link>
-    //      </li>
-    //      <li>
-    //        <Link style={linkStyle} to="/users">Usuários</Link>
-    //      </li>
-    //      <li>
-    //        <Link style={linkStyle} to="/licenses">Licenças</Link>
-    //      </li>
-    //      <li>
-    //        <Link style={linkStyle} to="/renewals">Renovações</Link>
-    //      </li>
-    //      <li>
-    //        <Link style={linkStyle} to="/notifications">Notificações</Link>
-    //      </li>
-    //    </ul>
-    //  </nav>
-    //</header>
   );
 };
 
