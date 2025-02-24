@@ -48,19 +48,19 @@ class UserService:
         user_id: int,
         user_data: Union[UserSchema, UserUpdate],
         current_user: User,
-        is_full_update: bool = False
+        is_full_update: bool = False,
     ) -> User:
         UserService._validate_permission(user_id, current_user)
         user = UserService._get_user_or_raise(session, user_id)
 
-        dump_args = {} if is_full_update else {"exclude_unset": True}
+        dump_args = {} if is_full_update else {'exclude_unset': True}
         update_data = user_data.model_dump(**dump_args)
 
         if 'email' in update_data:
             UserService._validate_email_uniqueness(
                 session=session,
                 email=update_data['email'],
-                excluded_user_id=user.id
+                excluded_user_id=user.id,
             )
 
         for field, value in update_data.items():

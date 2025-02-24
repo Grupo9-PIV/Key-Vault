@@ -6,5 +6,5 @@ class RequestStatus(str, Enum):
     APROVADA = 'aprovada'
     REJEITADA = 'rejeitada'
 
-    def __str__(self):   # pragma: no cover
+    def __str__(self):  # pragma: no cover
         return self.value

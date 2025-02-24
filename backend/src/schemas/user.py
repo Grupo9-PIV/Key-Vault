@@ -30,7 +30,7 @@ class UserUpdate(BaseModel):
     department: Optional[str] = None
 
     class Config:
-        extra = "forbid"  # evita campos extras não definidos
+        extra = 'forbid'  # evita campos extras não definidos
 
 
 class UserList(BaseModel):
