@@ -49,4 +49,4 @@ def test_token_expired_after_time(client: TestClient, user: User) -> None:
         )
 
         assert response.status_code == HTTPStatus.UNAUTHORIZED
-        assert response.json() == {'detail': 'Could not validate credentials'}
+        assert response.json() == {'detail': 'Token has expired'}

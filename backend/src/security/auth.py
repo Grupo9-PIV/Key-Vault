@@ -9,7 +9,11 @@ from sqlalchemy.sql import select
 from zoneinfo import ZoneInfo
 
 from src.database import get_session
-from src.exceptions import CredentialsException
+from src.exceptions import (
+    CredentialsException,
+    ExpiredTokenException,
+    InvalidTokenException,
+)
 from src.models import User
 from src.settings import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 
@@ -38,9 +42,9 @@ def get_current_user(
         if not email:
             raise CredentialsException()
     except ExpiredSignatureError:
-        raise CredentialsException()
+        raise ExpiredTokenException()
     except PyJWTError:
-        raise CredentialsException()
+        raise InvalidTokenException()
     else:
         user = session.scalar(select(User).where(User.email == email))
 

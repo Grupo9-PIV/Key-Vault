@@ -31,10 +31,24 @@ class CredentialsException(AppException):
         self.headers = {'WWW-Authenticate': 'Bearer'}
 
 
+class ExpiredTokenException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.UNAUTHORIZED, 'Token has expired')
+        self.headers = {'WWW-Authenticate': 'Bearer'}
+
+
+class InvalidTokenException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.UNAUTHORIZED, 'Invalid token')
+        self.headers = {'WWW-Authenticate': 'Bearer'}
+
+
 __all__ = [
     'AppException',
     'UserNotFoundException',
     'PermissionDeniedException',
     'EmailAlreadyExistsException',
     'CredentialsException',
+    'ExpiredTokenException',
+    'InvalidTokenException',
 ]
