@@ -52,7 +52,7 @@ def test_delete_license(session: Session, mock_license: License) -> None:
 def test_update_license(session: Session, mock_license: License) -> None:
     mock_license.software_name = 'New Soft'
     mock_license.version = 'v1.0.1'
-    mock_license.license_type = 'perpetua'
+    mock_license.license_type = 'perpétua'
     session.commit()
     session.refresh(mock_license)
 
@@ -61,7 +61,7 @@ def test_update_license(session: Session, mock_license: License) -> None:
     )
     assert updated_license.software_name == 'New Soft'
     assert updated_license.version == 'v1.0.1'
-    assert updated_license.license_type == 'perpetua'
+    assert updated_license.license_type == 'perpétua'
     assert updated_license.updated_at is not None
 
 
