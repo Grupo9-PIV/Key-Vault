@@ -2,6 +2,7 @@ from collections.abc import Generator
 from datetime import datetime
 
 import pytest
+from factory import Factory, LazyAttribute, Sequence
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import Session
@@ -9,8 +10,22 @@ from sqlalchemy.pool import StaticPool
 
 from src.app import app
 from src.database import get_session, table_registry
+from src.enums import UserRole
 from src.models import AuditLog, License, Notification, RenewalRequest, User
 from src.security import get_password_hash
+
+
+class UserFactory(Factory):
+    class Meta:
+        model = User
+
+    name: str = Sequence(lambda x: f'test-{x}')
+    email: str = LazyAttribute(lambda obj: f'{obj.name}@test.com')
+    password_hash: str = LazyAttribute(
+        lambda obj: get_password_hash(obj.name + '-senha')
+    )
+    role: UserRole = UserRole.USER
+    department: str = 'Teste'
 
 
 @pytest.fixture
@@ -57,13 +72,8 @@ def client(session: Session) -> Generator[TestClient, None, None]:
 def user(session: Session) -> User:
     plain_password = '12345678'
 
-    user = User(
-        email='teste@teste.com',
-        password_hash=get_password_hash(plain_password),
-        name='Teste',
-        role='user',
-        department='Teste',
-    )
+    user = UserFactory(password_hash=get_password_hash(plain_password))
+
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -77,13 +87,10 @@ def user(session: Session) -> User:
 def admin(session: Session) -> User:
     plain_password = '12345678'
 
-    admin_user = User(
-        email='admin@admin.com',
-        password_hash=get_password_hash(plain_password),
-        name='Admin',
-        role='admin',
-        department='Admin',
+    admin_user = UserFactory(
+        password_hash=get_password_hash(plain_password), role=UserRole.ADMIN
     )
+
     session.add(admin_user)
     session.commit()
     session.refresh(admin_user)

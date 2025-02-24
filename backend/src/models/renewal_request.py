@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Text, func
+from sqlalchemy import Enum, ForeignKey, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import table_registry
+from src.enums import RequestStatus
 
-DEFAULT_STATUS = 'pendente'
+DEFAULT_STATUS = RequestStatus.PENDENTE
 
 
 @table_registry.mapped_as_dataclass
@@ -40,7 +41,9 @@ class RenewalRequest:
     )
     reason: Mapped[str] = mapped_column(Text, nullable=True)
     feedback: Mapped[str] = mapped_column(Text, nullable=True)
-    status: Mapped[str] = mapped_column(default=DEFAULT_STATUS)
+    status: Mapped[RequestStatus] = mapped_column(
+        Enum(RequestStatus), default=DEFAULT_STATUS
+    )
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
     )

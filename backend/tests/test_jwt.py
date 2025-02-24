@@ -25,7 +25,7 @@ def test_jwt_invalid_token(client: TestClient) -> None:
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
-    assert response.json() == {'detail': 'Could not validate credentials'}
+    assert response.json() == {'detail': 'Invalid token'}
 
 
 def test_jwt_missing_email(client: TestClient) -> None:

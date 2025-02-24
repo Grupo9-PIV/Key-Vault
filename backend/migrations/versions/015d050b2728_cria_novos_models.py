@@ -10,6 +10,8 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
+from src.enums import RequestStatus, AuditAction
+
 
 # revision identifiers, used by Alembic.
 revision: str = '015d050b2728'
@@ -25,7 +27,7 @@ def upgrade() -> None:
     sa.Column('performed_by_id', sa.Integer(), nullable=False),
     sa.Column('entity_id', sa.Integer(), nullable=False),
     sa.Column('entity', sa.String(), nullable=False),
-    sa.Column('action', sa.String(), nullable=False),
+    sa.Column('action', sa.Enum(AuditAction), nullable=False),
     sa.Column('timestamp', sa.TIMESTAMP(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['performed_by_id'], ['users.id'], name='fk_audit_logs_performed_by_id'),
     sa.PrimaryKeyConstraint('id')
@@ -37,7 +39,7 @@ def upgrade() -> None:
     sa.Column('manager_id', sa.Integer(), nullable=False),
     sa.Column('reason', sa.Text(), nullable=True),
     sa.Column('feedback', sa.Text(), nullable=True),
-    sa.Column('status', sa.String(), nullable=False),
+    sa.Column('status', sa.Enum(RequestStatus), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['license_id'], ['licenses.id'], name='fk_renewal_requests_license_id'),

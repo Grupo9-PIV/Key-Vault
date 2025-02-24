@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from sqlalchemy import func, text
+from sqlalchemy import Enum, func, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import table_registry
+from src.enums import UserRole
 
 
 @table_registry.mapped_as_dataclass
@@ -15,7 +16,7 @@ class User:
     email: Mapped[str] = mapped_column(unique=True)
     password_hash: Mapped[str]
     name: Mapped[str]
-    role: Mapped[str]
+    role: Mapped[UserRole] = mapped_column(Enum(UserRole))
     department: Mapped[str] = mapped_column(nullable=True)
     is_first_login: Mapped[bool] = mapped_column(
         init=False, server_default=text('true')

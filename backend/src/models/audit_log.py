@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from sqlalchemy import TIMESTAMP, func
+from sqlalchemy import TIMESTAMP, Enum, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.database import table_registry
+from src.enums import AuditAction
 
 
 @table_registry.mapped_as_dataclass
@@ -15,7 +16,7 @@ class AuditLog:
     performed_by_id: Mapped[int]
     entity_id: Mapped[int]
     entity: Mapped[str]
-    action: Mapped[str]
+    action: Mapped[AuditAction] = mapped_column(Enum(AuditAction))
     timestamp: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True),
         init=False,
