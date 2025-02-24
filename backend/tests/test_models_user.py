@@ -4,12 +4,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from src.models import License, User
+from src.security import get_password_hash, verify_password
 
 
 def test_create_user(session: Session) -> None:
     user = User(
         email='teste@teste.com',
-        password_hash='12345678',
+        password_hash=get_password_hash('12345678'),
         name='Teste',
         role='admin',
         department='Teste',
@@ -23,6 +24,7 @@ def test_create_user(session: Session) -> None:
 
     assert result.id == 1
     assert result.email == 'teste@teste.com'
+    assert verify_password('12345678', result.password_hash)
 
 
 def test_delete_user(session: Session, user: User) -> None:
@@ -40,6 +42,7 @@ def test_update_user(session: Session, user: User) -> None:
     session.refresh(user)
 
     updated_user = session.scalar(select(User).where(User.id == user.id))
+
     assert updated_user.name == 'Teste Update'
     assert updated_user.role == 'manager'
     assert updated_user.updated_at is not None

@@ -2,6 +2,7 @@ from collections.abc import Generator
 from datetime import datetime
 
 import pytest
+from factory import Factory, LazyAttribute, Sequence
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import Session
@@ -9,7 +10,22 @@ from sqlalchemy.pool import StaticPool
 
 from src.app import app
 from src.database import get_session, table_registry
+from src.enums import UserRole
 from src.models import AuditLog, License, Notification, RenewalRequest, User
+from src.security import get_password_hash
+
+
+class UserFactory(Factory):
+    class Meta:
+        model = User
+
+    name: str = Sequence(lambda x: f'test-{x}')
+    email: str = LazyAttribute(lambda obj: f'{obj.name}@test.com')
+    password_hash: str = LazyAttribute(
+        lambda obj: get_password_hash(obj.name + '-senha')
+    )
+    role: UserRole = UserRole.USER
+    department: str = 'Teste'
 
 
 @pytest.fixture
@@ -54,18 +70,34 @@ def client(session: Session) -> Generator[TestClient, None, None]:
 
 @pytest.fixture
 def user(session: Session) -> User:
-    user = User(
-        email='teste@teste.com',
-        password_hash='12345678',
-        name='Teste',
-        role='admin',
-        department='Teste',
-    )
+    plain_password = '12345678'
+
+    user = UserFactory(password_hash=get_password_hash(plain_password))
+
     session.add(user)
     session.commit()
     session.refresh(user)
 
+    user.password = plain_password
+
     return user
+
+
+@pytest.fixture
+def admin(session: Session) -> User:
+    plain_password = '12345678'
+
+    admin_user = UserFactory(
+        password_hash=get_password_hash(plain_password), role=UserRole.ADMIN
+    )
+
+    session.add(admin_user)
+    session.commit()
+    session.refresh(admin_user)
+
+    admin_user.password = plain_password
+
+    return admin_user
 
 
 @pytest.fixture
@@ -138,3 +170,23 @@ def audit_log(session: Session, user: User, mock_license: License) -> AuditLog:
     session.commit()
 
     return audit_log
+
+
+@pytest.fixture
+def token(client, user) -> str:
+    response = client.post(
+        '/auth/token',
+        data={'username': user.email, 'password': user.password},
+    )
+
+    return response.json()['access_token']
+
+
+@pytest.fixture
+def adm_token(client, admin) -> str:
+    response = client.post(
+        '/auth/token',
+        data={'username': admin.email, 'password': admin.password},
+    )
+
+    return response.json()['access_token']
