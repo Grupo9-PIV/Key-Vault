@@ -48,7 +48,7 @@ class License:
     subscription_plan: Mapped[str] = mapped_column(nullable=True)
     conditions: Mapped[str] = mapped_column(Text, nullable=True)
     priority: Mapped[LicensePriority] = mapped_column(
-        Enum(LicenseType), default=DEFAULT_PRIORITY
+        Enum(LicensePriority), default=DEFAULT_PRIORITY
     )
 
     # relacionamentos
