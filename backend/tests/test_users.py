@@ -36,7 +36,7 @@ def test_create_user_valid(client: TestClient, session: Session) -> None:
 
 def test_create_user_duplicate_email(client: TestClient, user: User) -> None:
     user_data = {
-        'email': 'teste@teste.com',  # email já existente
+        'email': user.email,  # email já existente
         'password': 'senha',
         'name': 'teste',
         'role': 'user',
