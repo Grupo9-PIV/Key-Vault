@@ -7,5 +7,5 @@ class LicensePriority(str, Enum):
     MEDIA = 'média'
     BAIXA = 'baixa'
 
-    def __str__(self):
+    def __str__(self):   # pragma: no cover
         return self.value

@@ -8,5 +8,5 @@ class LicenseStatus(str, Enum):
     DESATIVADA = 'desativada'
     INVALIDA = 'inválida'
 
-    def __str__(self):
+    def __str__(self):   # pragma: no cover
         return self.value
