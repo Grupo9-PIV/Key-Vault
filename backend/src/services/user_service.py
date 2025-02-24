@@ -1,3 +1,5 @@
+from typing import Union
+
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
 
@@ -8,15 +10,14 @@ from src.exceptions import (
     UserNotFoundException,
 )
 from src.models import User
-from src.schemas import UserSchema
+from src.schemas import UserSchema, UserUpdate
 from src.security import get_password_hash
 
 
 class UserService:
     @staticmethod
     def create_user(session: Session, user: UserSchema) -> User:
-        if session.scalar(select(User).where(User.email == user.email)):
-            raise EmailAlreadyExistsException()
+        UserService._validate_email_uniqueness(session, user.email)
 
         new_user = User(
             email=user.email,
@@ -45,17 +46,28 @@ class UserService:
     def update_user(
         session: Session,
         user_id: int,
-        user_data: UserSchema,
+        user_data: Union[UserSchema, UserUpdate],
         current_user: User,
+        is_full_update: bool = False
     ) -> User:
         UserService._validate_permission(user_id, current_user)
         user = UserService._get_user_or_raise(session, user_id)
 
-        user.email = user_data.email
-        user.password_hash = get_password_hash(user_data.password)
-        user.name = user_data.name
-        user.role = user_data.role
-        user.department = user_data.department
+        dump_args = {} if is_full_update else {"exclude_unset": True}
+        update_data = user_data.model_dump(**dump_args)
+
+        if 'email' in update_data:
+            UserService._validate_email_uniqueness(
+                session=session,
+                email=update_data['email'],
+                excluded_user_id=user.id
+            )
+
+        for field, value in update_data.items():
+            if field == 'password':
+                user.password_hash = get_password_hash(value)
+            else:
+                setattr(user, field, value)
 
         session.commit()
         session.refresh(user)
@@ -74,6 +86,7 @@ class UserService:
 
         return user
 
+    # helper functions (DRY)
     @staticmethod
     def _get_user_or_raise(session: Session, user_id: int) -> User:
         user = session.scalar(select(User).where(User.id == user_id))
@@ -85,3 +98,15 @@ class UserService:
     def _validate_permission(user_id: int, current_user: User) -> None:
         if current_user.id != user_id and current_user.role != UserRole.ADMIN:
             raise PermissionDeniedException()
+
+    @staticmethod
+    def _validate_email_uniqueness(
+        session: Session, email: str, excluded_user_id: int | None = None
+    ) -> None:
+        query = select(User).where(User.email == email)
+
+        if excluded_user_id is not None:
+            query = query.where(User.id != excluded_user_id)
+
+        if session.scalar(query):
+            raise EmailAlreadyExistsException()
