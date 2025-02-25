@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from fastapi import APIRouter
 
-from src.schemas import UserList, UserPublic, UserSchema
+from src.schemas import UserList, UserPublic, UserSchema, UserUpdate
 from src.services import UserService
 from src.types import T_CurrentUser, T_Session
 
@@ -34,13 +34,27 @@ def read_user(
 
 
 @router.put('/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
-def update_user(
+def update_user_full(
     user_id: int,
-    user: UserSchema,
+    user_data: UserSchema,
     session: T_Session,
     current_user: T_CurrentUser,
 ):
-    return UserService.update_user(session, user_id, user, current_user)
+    return UserService.update_user(
+        session, user_id, user_data, current_user, is_full_update=True
+    )
+
+
+@router.patch(
+    '/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+)
+def update_user_partial(
+    user_id: int,
+    user_data: UserUpdate,
+    session: T_Session,
+    current_user: T_CurrentUser,
+):
+    return UserService.update_user(session, user_id, user_data, current_user)
 
 
 @router.delete(
