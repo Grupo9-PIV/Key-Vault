@@ -1,0 +1,44 @@
+/*
+.license-container {
+    max-width: 90%;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.search-input {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.license-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.license-table th, 
+.license-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.license-table th {
+    background-color: #444;
+    color: white;
+    font-weight: bold;
+}
+
+.license-table tr:nth-child(even) {
+    background-color: #222;
+}
+
+.license-table tr:hover {
+    background-color: #555;
+}
+*/
