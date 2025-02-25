@@ -3,13 +3,17 @@ from datetime import datetime, timedelta
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jwt import decode, encode
-from jwt.exceptions import PyJWTError
+from jwt.exceptions import ExpiredSignatureError, PyJWTError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
 from zoneinfo import ZoneInfo
 
 from src.database import get_session
-from src.exceptions import CredentialsException
+from src.exceptions import (
+    CredentialsException,
+    ExpiredTokenException,
+    InvalidTokenException,
+)
 from src.models import User
 from src.settings import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 
@@ -37,8 +41,10 @@ def get_current_user(
         email = payload.get('sub')
         if not email:
             raise CredentialsException()
+    except ExpiredSignatureError:
+        raise ExpiredTokenException()
     except PyJWTError:
-        raise CredentialsException()
+        raise InvalidTokenException()
     else:
         user = session.scalar(select(User).where(User.email == email))
 

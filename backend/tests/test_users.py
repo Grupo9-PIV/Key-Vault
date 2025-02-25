@@ -36,7 +36,7 @@ def test_create_user_valid(client: TestClient, session: Session) -> None:
 
 def test_create_user_duplicate_email(client: TestClient, user: User) -> None:
     user_data = {
-        'email': 'teste@teste.com',  # email já existente
+        'email': user.email,  # email já existente
         'password': 'senha',
         'name': 'teste',
         'role': 'user',
@@ -205,6 +205,106 @@ def test_delete_user_forbidden(
 def test_delete_not_found(client: TestClient, adm_token: str) -> None:
     response = client.delete(
         '/users/404', headers={'Authorization': f'Bearer {adm_token}'}
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json()['detail'] == 'User not found'
+
+
+def test_partial_update_single_field(
+    client: TestClient, user: User, token: str
+) -> None:
+    update_data = {'name': 'Novo Nome'}
+    response = client.patch(
+        f'/users/{user.id}',
+        json=update_data,
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()['name'] == 'Novo Nome'
+    assert response.json()['email'] == user.email
+
+
+def test_partial_update_multiple_fields(
+    client: TestClient, user: User, token: str
+) -> None:
+    update_data = {'name': 'Novo Nome', 'department': 'Novo Departamento'}
+
+    response = client.patch(
+        f'/users/{user.id}',
+        json=update_data,
+        headers={'Authorization': f'Bearer {token}'},
+    )
+    data = response.json()
+
+    assert response.status_code == HTTPStatus.OK
+    assert data['name'] == 'Novo Nome'
+    assert data['department'] == 'Novo Departamento'
+
+
+def test_partial_update_duplicate_email(
+    client: TestClient, user: User, token: str, admin: User
+) -> None:
+    response = client.patch(
+        f'/users/{user.id}',
+        json={'email': admin.email},
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert 'already exists' in response.json()['detail']
+
+
+def test_partial_update_password(
+    client: TestClient, user: User, token: str, session: Session
+) -> None:
+    new_password = 'nova_senha_secreta'
+    old_password = user.password_hash
+
+    response = client.patch(
+        f'/users/{user.id}',
+        json={'password': new_password},
+        headers={'Authorization': f'Bearer {token}'},
+    )
+    session.refresh(user)
+
+    assert response.status_code == HTTPStatus.OK
+    assert user.password_hash != new_password
+    assert user.password_hash != old_password
+
+
+def test_partial_update_other_user(
+    client: TestClient, token: str, admin: User
+) -> None:
+    response = client.patch(
+        f'/users/{admin.id}',
+        json={'name': 'Nome Alterado'},
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+def test_partial_update_invalid_fields(
+    client: TestClient, user: User, token: str
+) -> None:
+    response = client.patch(
+        f'/users/{user.id}',
+        json={'invalid_field': 'valor'},
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+def test_partial_update_nonexistent_user(
+    client: TestClient, adm_token: str
+) -> None:
+    response = client.patch(
+        '/users/404',
+        json={'name': 'Fantasma'},
+        headers={'Authorization': f'Bearer {adm_token}'},
     )
 
     assert response.status_code == HTTPStatus.NOT_FOUND

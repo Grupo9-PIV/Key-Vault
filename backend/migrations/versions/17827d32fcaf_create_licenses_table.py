@@ -10,6 +10,8 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
+from src.enums import LicenseType, LicenseStatus, LicensePriority
+
 
 # revision identifiers, used by Alembic.
 revision: str = '17827d32fcaf'
@@ -25,8 +27,8 @@ def upgrade() -> None:
     sa.Column('assigned_to_id', sa.Integer(), nullable=True),
     sa.Column('manager_id', sa.Integer(), nullable=True),
     sa.Column('software_name', sa.String(), nullable=False),
-    sa.Column('license_type', sa.String(), nullable=False),
-    sa.Column('status', sa.String(), nullable=False),
+    sa.Column('license_type', sa.Enum(LicenseType), nullable=False),
+    sa.Column('status', sa.Enum(LicenseStatus), nullable=False),
     sa.Column('developed_by', sa.String(), nullable=False),
     sa.Column('version', sa.String(), nullable=True),
     sa.Column('purchase_date', sa.DateTime(), nullable=False),
@@ -38,7 +40,7 @@ def upgrade() -> None:
     sa.Column('current_usage', sa.Integer(), nullable=True),
     sa.Column('subscription_plan', sa.String(), nullable=True),
     sa.Column('conditions', sa.Text(), nullable=True),
-    sa.Column('priority', sa.String(), nullable=False),
+    sa.Column('priority', sa.Enum(LicensePriority), nullable=False),
     sa.ForeignKeyConstraint(['assigned_to_id'], ['users.id'], name='fk_licenses_assigned_to_id'),
     sa.ForeignKeyConstraint(['manager_id'], ['users.id'], name='fk_licenses_manager_id'),
     sa.PrimaryKeyConstraint('id')
