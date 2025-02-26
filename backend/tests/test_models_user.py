@@ -74,7 +74,9 @@ def test_missing_required_fields(session: Session) -> None:
 
     with pytest.raises(IntegrityError) as exc_info:
         session.commit()
-    assert 'NOT NULL constraint failed' in str(exc_info.value)
+
+    assert 'null' in str(exc_info.value)
+    assert 'violates not-null constraint' in str(exc_info.value)
 
 
 def test_delete_user_with_license(
