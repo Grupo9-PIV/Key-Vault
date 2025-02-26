@@ -97,18 +97,39 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
   git clone git@github.com:Grupo9-PIV/Key-Vault.git
   ```
 
-- Crie um arquivo .env na raíz com as seguintes variáveis de ambiente configuradas (modifique usuários, senhas e chaves de acordo):
+- Crie um arquivo .env na raíz com as seguintes variáveis de ambiente (substitua valores conforme necessário):
 
   ```env
-   DATABASE_URL=<database-url>                  # e.g.: "sqlite:///database.db"
-   SECRET_KEY=<your-secret-key>                 # for decoding jwt tokens
-   ALGORITHM=<jwt-algorithm>                    # e.g.: "HS256"
-   ACCESS_TOKEN_EXPIRE_MINUTES=<minutes>        # time in minutes for token expiration
+    # 🔒 Backend
+
+    DATABASE_URL=postgresql+psycopg://admin:admin@db:5432/KEY_VAULT     # URL do PostgreSQL
+    SECRET_KEY="sua-chave-secreta"                                      # Chave para tokens JWT
+    ALGORITHM="HS256"                                                   # Algoritmo de criptografia
+    ACCESS_TOKEN_EXPIRE_MINUTES=30                                      # Tempo de expiração do token (minutos)
+    ENVIRONMENT="production"                                            # Ambiente (production/development)
+
+    # 🐘 PostgreSQL
+
+    POSTGRES_USER=admin                                                 # Usuário do banco de dados
+    POSTGRES_PASSWORD=admin                                             # Senha do banco de dados
+    POSTGRES_HOST=db                                                    # Host do PostgreSQL
+    POSTGRES_PORT=5432                                                  # Porta do PostgreSQL
+    POSTGRES_DB=KEY_VAULT                                               # Nome do banco de dados
+    TZ=America/Sao_Paulo                                                # Fuso horário
+
+    # 🛠️ pgAdmin
+
+    PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com                             # Email de acesso ao pgAdmin
+    PGADMIN_DEFAULT_PASSWORD=admin                                      # Senha do pgAdmin
   ```
 
 ### 🚀 Execução
 
-> TODO: Instruções de execução
+Dentro do diretório de `deploy`, execute o Docker Compose
+
+```bash
+docker compose up -d
+```
 
 ## 👥 Contribuição
 
