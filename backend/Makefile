@@ -14,7 +14,7 @@ setup:
 	@echo "Pode ser necessário recarregar o shell para atualizar o PATH..."
 
 install:
-	poetry install --without dev
+	poetry install --without dev --no-interaction --no-ansi
 
 dev:
 	poetry install --with dev

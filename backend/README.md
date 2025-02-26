@@ -45,6 +45,16 @@ Este projeto utiliza o framework **FastAPI** e gerenciador de dependências **Po
      poetry install --with dev
      ```
 
+4. Crie um `.env` dentro da pasta `backend` com as seguintes variáveis
+
+   ```env
+   DATABASE_URL="sqlite:///database.db"
+   SECRET_KEY="super-secret-key"
+   ALGORITHM="HS256"
+   ACCESS_TOKEN_EXPIRE_MINUTES=30
+   ENVIRONMENT="development"
+   ```
+
 ---
 
 ## Tarefas Automatizadas com Makefile
@@ -129,3 +139,5 @@ Remove o ambiente virtual, caches e relatórios de cobertura.
 
 - **`pyproject.toml`**: Gerenciamento de dependências e configuração de ferramentas.
 - **`Makefile`**: Automação de tarefas comuns.
+- **`database.db`**: Banco de dados SQLite para desenvolvimento.
+- **`Dockerfile`**: Arquivo de definição da imagem do backend para orquestração com Docker Compose.
