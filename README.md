@@ -79,7 +79,7 @@ O SGBD escolhido foi o PostgreSQL, ideal para aplicações que requerem alta con
 
 Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos definidas nos `models` da aplicação.
 
-> TODO: Criar MER do banco de dados
+![MER Banco de Dados](./docs/images/mer.png)
 
 ## ⚙️ Instalação e Execução
 
