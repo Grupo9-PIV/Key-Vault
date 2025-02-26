@@ -6,9 +6,11 @@
 
 ## ✨ Introdução
 
-Desenvolvido como parte da disciplina de Projeto Integrador V: Análise de Soluções Integradas para Organizações
+Desenvolvido como parte da disciplina de Projeto Integrador V: Análise de Soluções Integradas para Organizações.
 
 Este projeto tem como objetivo desenvolver um sistema de gerenciamento de licenças de software para uma empresa. O sistema permite registrar e acompanhar informações sobre licenças adquiridas, origem, vencimentos, quem está usando e quem são os responsáveis pelas renovações. Com essa ferramenta, a empresa pode otimizar o uso das licenças e garantir conformidade com os contratos.
+
+> [Landing Page](https://grupo9-piv.github.io/Key-Vault/)
 
 <div align="center">
 <p>
