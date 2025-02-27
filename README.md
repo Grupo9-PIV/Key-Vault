@@ -25,12 +25,6 @@ Este projeto tem como objetivo desenvolver um sistema de gerenciamento de licen�
 </p>
 </div>
 
-## 🎨 Layout
-
-O layout da aplicação está disponível no Figma:
-
-[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/M0nKLCKLdElRlMthmnS0bM/PROJETO-INTEGRADOR-V?t=qFffvOjE9HZJZCY9-1)
-
 ## 📚 Funcionalidades Principais
 
 - ✅ Cadastro e listagem de licenças de software
@@ -80,6 +74,12 @@ O layout da aplicação está disponível no Figma:
 - **Docker** - Contêinerização do ambiente
 - **Nginx** - Proxy reverso
 - **GitHub Actions** - CI/CD para automação de deploy
+
+## 🎨 Layout
+
+O layout da aplicação está disponível no Figma:
+
+[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/M0nKLCKLdElRlMthmnS0bM/PROJETO-INTEGRADOR-V?t=qFffvOjE9HZJZCY9-1)
 
 ## 🎲 Banco de Dados
 
