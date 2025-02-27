@@ -4,9 +4,9 @@ from datetime import datetime
 import pytest
 from factory import Factory, LazyAttribute, Sequence
 from fastapi.testclient import TestClient
-from sqlalchemy import Engine, create_engine, event
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
-from sqlalchemy.pool import StaticPool
+from testcontainers.postgres import PostgresContainer
 
 from src.app import app
 from src.database import get_session, table_registry
@@ -28,32 +28,24 @@ class UserFactory(Factory):
     department: str = 'Teste'
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def engine() -> Generator[Engine, None, None]:
-    engine = create_engine(
-        'sqlite:///:memory:',
-        connect_args={'check_same_thread': False},
-        poolclass=StaticPool,
-    )
+    with PostgresContainer('postgres:17', driver='psycopg') as postgres:
+        _engine = create_engine(postgres.get_connection_url())
 
-    # garante que a feature de foreign keys esteja ativada no sqlite
-    @event.listens_for(engine, 'connect')
-    def enable_foreign_keys(dbapi_connection, connection_record):
-        cursor = dbapi_connection.cursor()
-        cursor.execute('PRAGMA foreign_keys=ON')
-        cursor.close()
-
-    table_registry.metadata.create_all(engine)
-
-    yield engine
-
-    table_registry.metadata.drop_all(engine)
+        with _engine.begin():
+            yield _engine
 
 
 @pytest.fixture
 def session(engine: Engine) -> Generator[Session, None, None]:
+    table_registry.metadata.create_all(engine)
+
     with Session(engine) as session:
         yield session
+        session.rollback()
+
+    table_registry.metadata.drop_all(engine)
 
 
 @pytest.fixture

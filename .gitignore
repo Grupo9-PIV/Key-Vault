@@ -328,6 +328,9 @@ pyrightconfig.json
 #SQLite database
 *database.db
 
+#VSCode
+*.vscode**
+
 # End of https://www.toptal.com/developers/gitignore/api/linux,node,python
 
 # Generated using ignr.py - github.com/Antrikshy/ignr.py

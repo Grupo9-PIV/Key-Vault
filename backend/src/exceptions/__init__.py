@@ -5,6 +5,7 @@ from .auth import (
     WrongEmailOrPasswordException,
 )
 from .base import AppException
+from .license_exceptions import LicenseCodeAlreadyExistsException
 from .users import (
     EmailAlreadyExistsException,
     PermissionDeniedException,
@@ -20,4 +21,5 @@ __all__ = [
     'UserNotFoundException',
     'EmailAlreadyExistsException',
     'WrongEmailOrPasswordException',
+    'LicenseCodeAlreadyExistsException',
 ]
