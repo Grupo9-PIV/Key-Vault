@@ -27,9 +27,8 @@ class AuthService:
             select(User).where(User.email == form_data.username)
         )
 
-        if (
-            not user or
-            not verify_password(form_data.password, user.password_hash)
+        if not user or not verify_password(
+            form_data.password, user.password_hash
         ):
             raise WrongEmailOrPasswordException()
         return user
