@@ -23,6 +23,11 @@ class EmailAlreadyExistsException(AppException):
         super().__init__(HTTPStatus.BAD_REQUEST, 'Email already exists')
 
 
+class WrongEmailOrPasswordException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.BAD_REQUEST, 'Incorrect email or password')
+
+
 class CredentialsException(AppException):
     def __init__(self):
         super().__init__(
@@ -51,4 +56,5 @@ __all__ = [
     'CredentialsException',
     'ExpiredTokenException',
     'InvalidTokenException',
+    'WrongEmailOrPasswordException',
 ]
