@@ -1,11 +1,21 @@
 from http import HTTPStatus
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.routes import router
+from src.settings import settings
 
 app = FastAPI()
+
 app.include_router(router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allow_headers=['*'],
+)
 
 
 @app.get('/', status_code=HTTPStatus.OK)
