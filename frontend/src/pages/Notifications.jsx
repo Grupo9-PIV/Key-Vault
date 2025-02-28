@@ -1,36 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Notifications = () => {
-
   useEffect(() => {
-      document.title = "Notificações"; 
-    }, []);
-
+    document.title = 'Notificações';
+  }, []);
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/notifications")
+    fetch('http://localhost:8000/notifications')
       .then((response) => response.json())
       .then((data) => {
         setNotifications(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar notificações:", error);
+        console.error('Erro ao buscar notificações:', error);
         setLoading(false);
       });
   }, []);
 
   const markAsRead = (id) => {
     fetch(`http://localhost:8000/notifications/${id}/read`, {
-      method: "PATCH",
+      method: 'PATCH',
     })
       .then((response) => response.json())
       .then((updatedNotification) => {
@@ -38,7 +34,7 @@ const Notifications = () => {
           prev.map((notif) => (notif.id === id ? updatedNotification : notif))
         );
       })
-      .catch((error) => console.error("Erro ao marcar como lida:", error));
+      .catch((error) => console.error('Erro ao marcar como lida:', error));
   };
 
   if (loading) return <p>Carregando...</p>;
@@ -50,11 +46,21 @@ const Notifications = () => {
       <h2>Notificações</h2>
       <ul>
         {notifications.map((notif) => (
-          <li key={notif.id} style={{ background: notif.is_read ? "#ddd" : "#fff" }}>
-            <p><strong>Mensagem:</strong> {notif.message}</p>
-            <p><strong>Data:</strong> {new Date(notif.created_at).toLocaleString()}</p>
+          <li
+            key={notif.id}
+            style={{ background: notif.is_read ? '#ddd' : '#fff' }}
+          >
+            <p>
+              <strong>Mensagem:</strong> {notif.message}
+            </p>
+            <p>
+              <strong>Data:</strong>{' '}
+              {new Date(notif.created_at).toLocaleString()}
+            </p>
             {!notif.is_read && (
-              <button onClick={() => markAsRead(notif.id)}>Marcar como lida</button>
+              <button onClick={() => markAsRead(notif.id)}>
+                Marcar como lida
+              </button>
             )}
           </li>
         ))}
