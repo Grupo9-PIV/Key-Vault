@@ -1,25 +1,21 @@
-
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Início</title>
-</head>
-<body>
-  
-</body>
-</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Início</title>
+  </head>
+  <body></body>
+</html>;
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import '../styles/style.css'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import '../styles/style.css';
 
 const Initial = () => {
-
   useEffect(() => {
-    document.title = "Home"; 
+    document.title = 'Home';
   }, []);
 
   return (
@@ -33,33 +29,57 @@ const Initial = () => {
               <Link to="/users">
                 <div className="align-items-center col d-flex flex-column gap-2">
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <img className="p-5" src="././public/usuarios.png" alt="Usuários" />
+                    <img
+                      className="p-5"
+                      src="././public/assets/usuarios.png"
+                      alt="Usuários"
+                    />
                   </div>
-                  <h4 className="fw-semibold mb-0 text-body-emphasis">Usuários</h4>
+                  <h4 className="fw-semibold mb-0 text-body-emphasis">
+                    Usuários
+                  </h4>
                 </div>
               </Link>
               <Link to="/licenses">
                 <div className="align-items-center col d-flex flex-column gap-2">
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                    <img className="p-5"  src="././public/licencas.png" alt="Licenças" />
+                    <img
+                      className="p-5"
+                      src="././public/assets/licencas.png"
+                      alt="Licenças"
+                    />
                   </div>
-                  <h4 className="fw-semibold mb-0 text-body-emphasis">Licenças</h4>
+                  <h4 className="fw-semibold mb-0 text-body-emphasis">
+                    Licenças
+                  </h4>
                 </div>
               </Link>
               <Link to="/notifications">
                 <div className="align-items-center col d-flex flex-column gap-2">
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                  <img className="p-5"  src="././public/notificacoes.png" alt="Notificações" />
+                    <img
+                      className="p-5"
+                      src="././public/assets/notificacoes.png"
+                      alt="Notificações"
+                    />
                   </div>
-                  <h4 className="fw-semibold mb-0 text-body-emphasis">Notificações</h4>
+                  <h4 className="fw-semibold mb-0 text-body-emphasis">
+                    Notificações
+                  </h4>
                 </div>
               </Link>
               <Link to="/renewals">
                 <div className="align-items-center col d-flex flex-column gap-2">
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
-                  <img className="p-5"  src="././public/renovacoes.png" alt="Renovações" />
+                    <img
+                      className="p-5"
+                      src="././public/assets/renovacoes.png"
+                      alt="Renovações"
+                    />
                   </div>
-                  <h4 className="fw-semibold mb-0 text-body-emphasis">Renovações</h4>
+                  <h4 className="fw-semibold mb-0 text-body-emphasis">
+                    Renovações
+                  </h4>
                 </div>
               </Link>
               {/* <Link to="/crud">Administração Geral (CRUD) - Ajustar caminho depois</Link> */}
@@ -73,9 +93,3 @@ const Initial = () => {
 };
 
 export default Initial;
-
-
-
-
-
-

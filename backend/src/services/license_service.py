@@ -1,4 +1,8 @@
 from sqlalchemy.orm import Session
+
+from src.exceptions import (
+    LicenseCodeAlreadyExistsException,
+)
 from src.models.license import License
 from src.schemas.license import LicenseCreate, LicenseUpdate
 from src.exceptions import  LicenseNotFoundException  # Exceção para código de licença não encontrada
@@ -13,6 +17,7 @@ def create_license(db: Session, license_data: LicenseCreate):
     db.refresh(new_license)
     return new_license
 
+
 # Função para buscar uma licença por ID
 def get_license(db: Session, license_id: int):
     license_obj = db.query(License).filter(License.id == license_id).first()
@@ -20,9 +25,11 @@ def get_license(db: Session, license_id: int):
         raise LicenseNotFoundException()
     return license_obj
 
+
 # Função para buscar todas as licenças
 def get_all_licenses(db: Session, skip: int = 0, limit: int = 10):
     return db.query(License).offset(skip).limit(limit).all()
+
 
 # Função para atualizar uma licença
 def update_license(db: Session, license_id: int, license_data: LicenseUpdate):
@@ -51,6 +58,7 @@ def partial_update_license(db: Session, license_id: int, license_data: LicenseUp
     db.commit()
     db.refresh(license_obj)
     return license_obj
+
 
 # Função para deletar uma licença
 def delete_license(db: Session, license_id: int):

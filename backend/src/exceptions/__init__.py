@@ -1,6 +1,18 @@
 from http import HTTPStatus
 
 from fastapi import HTTPException
+from .auth import (
+    CredentialsException,
+    ExpiredTokenException,
+    InvalidTokenException,
+    WrongEmailOrPasswordException,
+)
+from .base import AppException
+from .users import (
+    EmailAlreadyExistsException,
+    PermissionDeniedException,
+    UserNotFoundException,
+)
 
 class AppException(HTTPException):
     def __init__(self, status_code: int, detail: str):
@@ -59,9 +71,6 @@ class LicenseInactiveException(AppException):
 
 __all__ = [
     'AppException',
-    'UserNotFoundException',
-    'PermissionDeniedException',
-    'EmailAlreadyExistsException',
     'CredentialsException',
     'ExpiredTokenException',
     'InvalidTokenException',

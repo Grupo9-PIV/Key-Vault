@@ -1,5 +1,5 @@
-import "./App.css";
-import AppRoutes from "./routes"; // Importação das rotas
+import './App.css';
+import AppRoutes from './routes'; // Importação das rotas
 
 function App() {
   return (
@@ -10,5 +10,3 @@ function App() {
 }
 
 export default App;
-
-

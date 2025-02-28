@@ -3,13 +3,13 @@ from typing import Optional  # Permite definir campos opcionais
 from pydantic import BaseModel, field_serializer
 from src.enums import LicensePriority, LicenseStatus
 
-
 """Esse arquivo cria o esquema pras licenças a partir do pydantic, pra validar e sinalizar os dados, ele foi feito de acordo com
 o arquivo license.py, refereciando as variáveis de lá
 """
 
+
 class LicenseBase(BaseModel):
-    """Modelo básico de uma licença"""    
+    """Modelo básico de uma licença""" 
     software_name: str  # Nome do software
     license_type: str  # Tipo de licença  vitlaícia, anual, mensal
     status: str  # Status da licença ativa, expirada
@@ -25,10 +25,10 @@ class LicenseBase(BaseModel):
 
 
 class LicenseCreate(LicenseBase):
-    """Schema para criação de uma nova licença, o que tá com optional é porque não é obrigatório, talvez deva ser?"""
     license_key: Optional[str] = None  # Chave da licença
     assigned_to_id: Optional[int] = None  # ID do usuário atribuído
     manager_id: Optional[int] = None  # ID de quem gerencia a licnça
+
 
 class LicenseUpdate(BaseModel):
     """Schema para atualização de uma licença """
@@ -39,6 +39,7 @@ class LicenseUpdate(BaseModel):
     current_usage: Optional[int] = None  
     subscription_plan: Optional[str] = None  
     conditions: Optional[str] = None  
+
 
 class LicenseResponse(LicenseBase):
     """Schema de resposta, utilizado para retornar informações sobre uma licença"""
@@ -59,4 +60,4 @@ class LicenseResponse(LicenseBase):
         return value.value if value else None
 
     class Config:
-        from_attributes = True  # Permite converter objetos do SQLAlchemy automaticamente
+        from_attributes = True
