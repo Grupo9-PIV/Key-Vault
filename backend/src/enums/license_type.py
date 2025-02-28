@@ -10,6 +10,7 @@ class LicenseType(str, Enum):
     OPEN_SOURCE = 'open_source'
     FREEMIUM = 'freemium'
     PAY_PER_USE = 'pay_per_use'
+    ANUAL = 'Anual'
 
     def __str__(self):  # pragma: no cover
         return self.value

@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from fastapi import HTTPException
-from .license_exceptions import LicenseCodeAlreadyExistsException #para a exceção
 
 class AppException(HTTPException):
     def __init__(self, status_code: int, detail: str):
@@ -43,6 +42,21 @@ class InvalidTokenException(AppException):
         self.headers = {'WWW-Authenticate': 'Bearer'}
 
 
+# Exceção para licença não encontrada
+class LicenseNotFoundException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.NOT_FOUND, "Not Found")
+
+# Exceção para licença expirada
+class LicenseExpiredException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.BAD_REQUEST, "Bad Request")
+
+# Exceção para licença inativa
+class LicenseInactiveException(AppException):
+    def __init__(self):
+        super().__init__(HTTPStatus.FORBIDDEN, "Forbidden")
+
 __all__ = [
     'AppException',
     'UserNotFoundException',
@@ -51,5 +65,7 @@ __all__ = [
     'CredentialsException',
     'ExpiredTokenException',
     'InvalidTokenException',
-    'LicenseCodeAlreadyExistsException',
+    'LicenseNotFoundException',
+    'LicenseExpiredException',
+    'LicenseInactiveException',
 ]

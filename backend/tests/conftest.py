@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 from factory import Factory, LazyAttribute, Sequence
@@ -99,6 +99,54 @@ def admin(session: Session) -> User:
 
     return admin_user
 
+
+@pytest.fixture
+def license(session: Session, user: User) -> License:
+    license = License(
+        assigned_to_id=user.id,
+        manager_id=user.id,
+        software_name='Test Software',
+        license_type='Anual',
+        status='ativa',
+        developed_by='Test Company',
+        version='1.0.0',
+        purchase_date=datetime.now(),
+        start_date=datetime.now(),
+        end_date=datetime.now() + timedelta(days=365),
+        license_key='12345-ABCDE',
+        current_usage=0,
+        subscription_plan='Basic',
+        conditions='None',
+    )
+    session.add(license)
+    session.commit()
+    session.refresh(license)
+    return license
+
+@pytest.fixture
+def licenses(session: Session, user: User) -> list[License]:
+    licenses = []
+    for i in range(5):
+        license = License(
+            assigned_to_id=user.id,
+            manager_id=user.id,
+            software_name=f'Software {i}',
+            license_type='trial',
+            status='ativa',
+            developed_by=f'Company {i}',
+            version='v1.0.0',
+            purchase_date=datetime(1900, 1, 1),
+            start_date=datetime(1900, 1, 1),
+            end_date=datetime(1900, 1, 1),
+            license_key=f'KEY-{i}',
+            current_usage=None,
+            subscription_plan=None,
+            conditions=None,
+        )
+        session.add(license)
+        licenses.append(license)
+    session.commit()
+    return licenses
 
 @pytest.fixture
 def mock_license(session: Session, user: User) -> License:
