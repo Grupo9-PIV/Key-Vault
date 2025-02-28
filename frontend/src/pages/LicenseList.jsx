@@ -1,60 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import "../styles/LicenseList.css";
+import '../styles/LicenseList.css';
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const licensesMock = [
   {
     id: 1,
-    software_name: "Adobe Photoshop",
-    status: "Ativa",
+    software_name: 'Adobe Photoshop',
+    status: 'Ativa',
     max_users: 10,
     in_use: 4,
-    department: "Design",
-    acquisition_date: "2023-01-15",
-    expiration_date: "2026-01-15",
+    department: 'Design',
+    acquisition_date: '2023-01-15',
+    expiration_date: '2026-01-15',
   },
   {
     id: 2,
-    software_name: "Microsoft Office",
-    status: "Expirada",
+    software_name: 'Microsoft Office',
+    status: 'Expirada',
     max_users: 50,
     in_use: 50,
-    department: "Administrativo",
-    acquisition_date: "2020-06-10",
-    expiration_date: "2023-06-10",
+    department: 'Administrativo',
+    acquisition_date: '2020-06-10',
+    expiration_date: '2023-06-10',
   },
   {
     id: 3,
-    software_name: "AutoCAD",
-    status: "Ativa",
+    software_name: 'AutoCAD',
+    status: 'Ativa',
     max_users: 20,
     in_use: 10,
-    department: "Engenharia",
-    acquisition_date: "2022-05-20",
-    expiration_date: "2025-05-20",
+    department: 'Engenharia',
+    acquisition_date: '2022-05-20',
+    expiration_date: '2025-05-20',
   },
   {
     id: 4,
-    software_name: "Visual Studio",
-    status: "Pendente",
+    software_name: 'Visual Studio',
+    status: 'Pendente',
     max_users: 15,
     in_use: 5,
-    department: "TI",
-    acquisition_date: "2024-02-01",
-    expiration_date: "2027-02-01",
+    department: 'TI',
+    acquisition_date: '2024-02-01',
+    expiration_date: '2027-02-01',
   },
 ];
 
 const LicenseList = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    document.title = "Lista de Licenças"; 
+    document.title = 'Lista de Licenças';
   }, []);
 
   const filteredLicenses = licensesMock
@@ -108,10 +107,9 @@ const LicenseList = () => {
           ))}
         </tbody>
       </table>
-      <Footer />    
+      <Footer />
     </div>
   );
 };
 
 export default LicenseList;
-

@@ -1,36 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Renewals = () => {
-
   useEffect(() => {
-      document.title = "Lista de Renovações"; 
-    }, []);
+    document.title = 'Lista de Renovações';
+  }, []);
 
   const [renewals, setRenewals] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/renewal_requests")
+    fetch('http://localhost:8000/renewal_requests')
       .then((response) => response.json())
       .then((data) => {
         setRenewals(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar renovações:", error);
+        console.error('Erro ao buscar renovações:', error);
         setLoading(false);
       });
   }, []);
 
   if (loading) return <p>Carregando...</p>;
-  if (renewals.length === 0) return <p>Nenhuma solicitação de renovação encontrada.</p>;
+  if (renewals.length === 0)
+    return <p>Nenhuma solicitação de renovação encontrada.</p>;
 
   return (
     <div>
