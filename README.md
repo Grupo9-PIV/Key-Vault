@@ -109,16 +109,14 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
 
   ```env
     # 🔒 Backend
-
     DATABASE_URL=postgresql+psycopg://admin:admin@db:5432/KEY_VAULT     # URL do PostgreSQL
-    SECRET_KEY="sua-chave-secreta"                                      # Chave para tokens JWT
-    ALGORITHM="HS256"                                                   # Algoritmo de criptografia
+    SECRET_KEY=sua-chave-secreta                                        # Chave para tokens JWT
+    ALGORITHM=HS256                                                     # Algoritmo de criptografia
     ACCESS_TOKEN_EXPIRE_MINUTES=30                                      # Tempo de expiração do token (minutos)
-    ENVIRONMENT="production"                                            # Ambiente (production/development)
+    ENVIRONMENT=production                                              # Ambiente (production/development)
     CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80           # Permite a comunicação entre os serviços
 
     # 🐘 PostgreSQL
-
     POSTGRES_USER=admin                                                 # Usuário do banco de dados
     POSTGRES_PASSWORD=admin                                             # Senha do banco de dados
     PGUSER=admin                                                        # Igual ao POSTGRES_USER
@@ -128,7 +126,6 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
     TZ=America/Sao_Paulo                                                # Fuso horário
 
     # 🛠️ pgAdmin
-
     PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com                             # Email de acesso ao pgAdmin
     PGADMIN_DEFAULT_PASSWORD=admin                                      # Senha do pgAdmin
   ```
