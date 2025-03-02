@@ -12,7 +12,7 @@ const Header = () => {
         <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
           <Link className="nav-link px-2 link-body-emphasis" to="#">
             <img
-              src="././public/assets/logo.png"
+              src="assets/logo.png"
               alt="Logo"
               width="130"
               height="auto"
@@ -48,7 +48,7 @@ const Header = () => {
                 to="/notifications"
               >
                 <img
-                  src="././public/assets/sino.png"
+                  src="assets/sino.png"
                   alt="Sino"
                   width="25"
                   height="25"
