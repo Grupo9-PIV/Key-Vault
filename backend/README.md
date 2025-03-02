@@ -53,6 +53,7 @@ Este projeto utiliza o framework **FastAPI** e gerenciador de dependências **Po
    ALGORITHM="HS256"
    ACCESS_TOKEN_EXPIRE_MINUTES=30
    ENVIRONMENT="development"
+   CORS_ALLOWED_ORIGINS="http://localhost:5173"
    ```
 
 ---
