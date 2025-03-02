@@ -1,17 +1,25 @@
 from datetime import datetime
+
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
+
+from src.enums import LicensePriority, LicenseStatus, LicenseType
 from src.models import License
-from src.enums import LicenseStatus, LicenseType, LicensePriority
 from src.services.license_service import LicenseService
 
 # testes refeitos, agora com factory
 
+# constantes pra msg HTTP
+HTTP_OK = 200
+HTTP_NO_CONTENT = 204
+
 
 def test_create_license(session: Session, license_factory):
+
     """
     Testa a criação de uma licença usando a LicenseFactory.
     """
+
     new_license = license_factory(
         software_name='Test Software',
         license_type=LicenseType.TRIAL,
@@ -38,7 +46,7 @@ def test_get_licenses(client: TestClient, token: str):
         '/licenses/', headers={'Authorization': f'Bearer {token}'}
     )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTP_OK
     data = response.json()
     assert isinstance(data, list)
 
@@ -53,7 +61,7 @@ def test_get_license_by_id(client: TestClient, token: str, license_factory):
         headers={'Authorization': f'Bearer {token}'},
     )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTP_OK
     data = response.json()
     assert data['id'] == new_license.id
     assert data['software_name'] == 'Software Teste'
@@ -80,7 +88,7 @@ def test_update_license(client: TestClient, token: str, license_factory):
         headers={'Authorization': f'Bearer {token}'},
     )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTP_OK
     updated_license = response.json()
     assert updated_license['software_name'] == 'windows'
     assert updated_license['license_key'] == '12345ABCDE67890FGHIJ11123'
@@ -103,7 +111,7 @@ def test_delete_license(
 
     # Verifica se o status da resposta é 204 (sem conteúdo)
     assert (
-        response.status_code == 204
+        response.status_code == HTTP_NO_CONTENT
     )  # Código 204 indica sucesso sem conteúdo
 
     # Verifica se a licença foi removida do banco de dados

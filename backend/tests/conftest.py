@@ -1,8 +1,11 @@
 from collections.abc import Generator
 from datetime import datetime
 
+import factory
 import pytest
-from factory import Factory, LazyAttribute, Sequence, Faker
+from factory import Factory, LazyAttribute, Sequence
+from factory.alchemy import SQLAlchemyModelFactory
+from faker import Faker
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
@@ -10,14 +13,9 @@ from testcontainers.postgres import PostgresContainer
 
 from src.app import app
 from src.database import get_session, table_registry
-from src.enums import UserRole, LicenseStatus, LicensePriority, LicenseType
+from src.enums import LicensePriority, LicenseStatus, UserRole
 from src.models import AuditLog, License, Notification, RenewalRequest, User
 from src.security import get_password_hash
-
-import factory
-import re
-from factory.alchemy import SQLAlchemyModelFactory
-from faker import Faker
 
 
 class UserFactory(Factory):

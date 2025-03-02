@@ -1,25 +1,26 @@
 import re  # precisa para validar as chaves das licenças
-from sqlalchemy.orm import Session
-from src.models.license import License
-from src.schemas.license import LicenseCreate, LicenseUpdate
-from src.exceptions import (
-    LicenseNotFoundException,
-    LicenseExpiredException,
-    LicensePendingException,
-    LicenseDeactivatedException,
-    LicenseInvalidException,
-)
+from datetime import datetime
 from typing import (
     Union,
 )  # essa função declara que uma variável pode ter vários tipos de dados
-from src.models.license import LicenseType
-from datetime import datetime
+
 from fastapi import Response
+from sqlalchemy.orm import Session
+
+from src.exceptions import (
+    LicenseDeactivatedException,
+    LicenseExpiredException,
+    LicenseInvalidException,
+    LicenseNotFoundException,
+    LicensePendingException,
+)
+from src.models.license import License, LicenseStatus, LicenseType
+from src.schemas.license import LicenseCreate, LicenseUpdate
 
 
-# criação do método estático pra chamar todas as funções pela classe LicenseService
+# método estático pra chamar todas as funções pela classe LicenseService
 class LicenseService:
-    # regras para cada software, para cada nome de software, adicionar uma quant alfanum de caracteres
+    # nome de software, adicionar uma quant alfanum de caracteres
     SOFTWARE_LICENSE_RULES = {
         'windows': 25,
         'adobe': 24,
@@ -32,7 +33,7 @@ class LicenseService:
     ) -> Union[str, None]:
         """
         Valida e mapeia o tipo de licença.
-        - Se for uma assinatura, aceita valores como "Anual", "Mensal" ou "Trimestral".
+        - Assinatura, aceita valores como "Anual", "Mensal" ou "Trimestral".
         - Se for freemium, aceita valores personalizados (se necessário).
         - Caso contrário, valida se o valor é um LicenseType válido.
         """
@@ -42,7 +43,7 @@ class LicenseService:
         if isinstance(license_type, LicenseType):
             return license_type.value  # Retorna o valor do enum como string
 
-        # Converte para minúsculas para facilitar a comparação e garante que tudo seja str na entrada
+        # Converte para minúsculas e str
         license_type_lower = str(license_type).lower()
 
         # Verifica se o valor é válido
@@ -60,7 +61,7 @@ class LicenseService:
 
     @staticmethod
     def normalize_license_type(license_type: str) -> str:
-        if license_type in ['anual', 'mensal', 'trimestral']:
+        if license_type in {'anual', 'mensal', 'trimestral'}:
             return 'assinatura'
         return license_type
 
@@ -88,12 +89,13 @@ class LicenseService:
                 software_name
             ]
 
-            # Regex para verificar se a chave é alfanumérica e tem o tamanho esperado
+            # Regex verifica se a chave é alfanum e tem o tamanho esperado
             if not re.fullmatch(
                 r'^[A-Za-z0-9]{' + str(expected_length) + r'}$', license_key
             ):
                 raise ValueError(
-                    f'A chave de licença para {software_name.capitalize()} deve conter exatamente {expected_length} caracteres alfanuméricos.'
+                    f'A chave de licença do {software_name.capitalize()} '
+                    f'requer {expected_length} caracteres.'
                 )
 
         new_license = License(
@@ -157,8 +159,9 @@ class LicenseService:
                     license_key,
                 ):
                     raise ValueError(
-                        f'A chave de licença para {software_name.capitalize()} deve conter exatamente {expected_length} caracteres alfanuméricos.'
-                    )
+                    f'A chave de licença do {software_name.capitalize()} '
+                    f'requer {expected_length} caracteres alfanuméricos.'
+                )
 
         # Lista de campos obrigatórios
         required_fields = [

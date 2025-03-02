@@ -1,15 +1,13 @@
 from datetime import datetime
 from typing import Optional  # Permite definir campos opcionais
-from pydantic import BaseModel, field_serializer, Field
-from src.enums import LicensePriority, LicenseStatus
 
-"""Esse arquivo cria o esquema pras licenças a partir do pydantic, 
-pra validar e sinalizar os dados, ele foi feito de acordo com
-o arquivo license.py, refereciando as variáveis de lá
-"""
+from pydantic import BaseModel, Field, field_serializer
+
+from src.enums import LicensePriority, LicenseStatus
 
 
 class LicenseBase(BaseModel):
+
     """Modelo básico de uma licença"""
 
     software_name: str  # Nome do software
@@ -38,7 +36,7 @@ class LicenseCreate(LicenseBase):
 
 
 class LicenseUpdate(LicenseBase):
-    """Schema para atualização de uma licença"""
+    # Schema para atualização de uma licença
 
     software_name: Optional[str] = None
     license_type: Optional[str] = None
@@ -58,7 +56,7 @@ class LicenseUpdate(LicenseBase):
 
 
 class LicenseResponse(LicenseBase):
-    """Schema de resposta, utilizado para retornar informações sobre uma licença"""
+    """Schema de resposta, retorna informações sobre uma licença"""
 
     id: int
     created_at: datetime
@@ -67,11 +65,13 @@ class LicenseResponse(LicenseBase):
     @field_serializer(
         'created_at', 'updated_at', 'start_date', 'end_date', 'purchase_date'
     )
-    def serialize_dates(self, value: datetime) -> str:
+    @staticmethod
+    def serialize_dates(value: datetime) -> str:
         return value.isoformat() if value else None
 
     @field_serializer('priority', 'status')
-    def serialize_enum(self, value) -> str:
+    @staticmethod
+    def serialize_enum(value) -> str:
         return value.value if value else None
 
     class Config:
