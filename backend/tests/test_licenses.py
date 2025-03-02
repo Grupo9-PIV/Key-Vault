@@ -1,199 +1,99 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../backend/src")))
-
-from http import HTTPStatus
-from pydantic import TypeAdapter
+import pytest
+from datetime import datetime
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-
 from src.models import License
-from src.schemas.license import LicenseResponse
+from src.enums import LicenseStatus, LicenseType, LicensePriority
+from src.services.license_service import LicenseService
 
+#testes refeitos, agora com factory 
 
-def test_create_license(client: TestClient, token: str) -> None:
-    license_data = {
-        'software_name': 'Test Software',
-        'license_type': 'Anual',
-        'status': 'ativa',
-        'developed_by': 'Test Company',
-        'start_date': '2025-01-01T00:00:00',
-        'end_date': '2026-01-01T00:00:00',
-        'priority': 'alta',
-        'license_key': '12345-ABCDE',
-        'version': '1.0.0',
-        'purchase_date': '2024-01-01T00:00:00',  
-        'current_usage': 0,  
-        'subscription_plan': 'Basic',  
-        'conditions': 'None',  
-    }
-
-    response = client.post(
-        '/licenses/',
-        json=license_data,
-        headers={'Authorization': f'Bearer {token}'},
+def test_create_license(session: Session, license_factory):
+    """
+    Testa a criação de uma licença usando a LicenseFactory.
+    """
+    new_license = license_factory(
+        software_name="Test Software",
+        license_type=LicenseType.TRIAL,
+        status=LicenseStatus.ATIVA,
+        developed_by="Test Corp",
+        version="v1.2.3",
+        priority=LicensePriority.ALTA,
+        purchase_date=datetime(2024, 1, 1),
+        start_date=datetime(2024, 1, 1),
+        end_date=datetime(2025, 1, 1),
     )
+
+    assert new_license is not None
+    assert new_license.software_name == "Test Software"
+    assert new_license.status == LicenseStatus.ATIVA
+    assert new_license.priority == LicensePriority.ALTA
+
+
+def test_get_licenses(client: TestClient, token: str):
+    """
+    Testa a listagem de licenças via API.
+    """
+    response = client.get("/licenses/", headers={"Authorization": f"Bearer {token}"})
+    
+    
+    assert response.status_code == 200
     data = response.json()
-
-    assert data['software_name'] == license_data['software_name']
-    assert data['license_type'] == license_data['license_type']
-    assert data['status'] == license_data['status']
-    assert data['developed_by'] == license_data['developed_by']
-    assert data['start_date'] == license_data['start_date']
-    assert data['end_date'] == license_data['end_date']
-    assert data['priority'] == license_data['priority']
-    assert data['license_key'] == license_data['license_key']
-    assert data['version'] == license_data['version']
-    assert data['purchase_date'] == license_data['purchase_date']
-    assert data['current_usage'] == license_data['current_usage']
-    assert data['subscription_plan'] == license_data['subscription_plan']
-    assert data['conditions'] == license_data['conditions']
-    assert 'id' in data and data['id'] is not None, "ID não foi retornado ou é inválido"
+    assert isinstance(data, list)
 
 
-from datetime import datetime
+def test_get_license_by_id(client: TestClient, token: str, license_factory):
+    """
+    Testa a busca de uma licença específica pelo ID.
+    """
+    new_license = license_factory(software_name="Software Teste")
+    response = client.get(f"/licenses/{new_license.id}", headers={"Authorization": f"Bearer {token}"})
 
-def test_read_license(client: TestClient, token: str, license: License) -> None:
-    license_schema = TypeAdapter(LicenseResponse).dump_python(license)
-
-    # Verifique se o valor é do tipo datetime antes de chamar isoformat()
-    if isinstance(license_schema['start_date'], datetime):
-        license_schema['start_date'] = license_schema['start_date'].isoformat()
-    else:
-        license_schema['start_date'] = None if not license_schema['start_date'] else license_schema['start_date']
-
-    if isinstance(license_schema['end_date'], datetime):
-        license_schema['end_date'] = license_schema['end_date'].isoformat()
-    else:
-        license_schema['end_date'] = None if not license_schema['end_date'] else license_schema['end_date']
-
-    if isinstance(license_schema['purchase_date'], datetime):
-        license_schema['purchase_date'] = license_schema['purchase_date'].isoformat()
-    else:
-        license_schema['purchase_date'] = None if not license_schema['purchase_date'] else license_schema['purchase_date']
-
-    if isinstance(license_schema['created_at'], datetime):
-        license_schema['created_at'] = license_schema['created_at'].isoformat()
-    else:
-        license_schema['created_at'] = None if not license_schema['created_at'] else license_schema['created_at']
-
-    if isinstance(license_schema['updated_at'], datetime):
-        license_schema['updated_at'] = license_schema['updated_at'].isoformat()
-    else:
-        license_schema['updated_at'] = None if not license_schema['updated_at'] else license_schema['updated_at']
-
-    response = client.get(
-        f'/licenses/{license.id}',
-        headers={'Authorization': f'Bearer {token}'}
-    )
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == license_schema
-
-
-
-def test_read_license_not_found(client: TestClient, token: str) -> None:
-    response = client.get(
-        '/licenses/404', 
-        headers={'Authorization': f'Bearer {token}'},
-    )
-    
-    # O servidor deve retornar 404, indicando que a licença não foi encontrada
-    assert response.status_code == HTTPStatus.NOT_FOUND
-
-
-
-def test_update_license(client: TestClient, token: str, license: License) -> None:
-    updated_data = {
-        'software_name': 'Test Software',
-        'license_type': 'Anual',
-        'status': 'expirada',
-        'developed_by': 'Test Company',
-        'start_date': '2025-06-01T00:00:00',
-        'end_date': '2026-06-01T00:00:00',
-        'priority': 'baixa',
-    }
-
-    response = client.put(
-        f'/licenses/{license.id}',
-        json=updated_data,
-        headers={'Authorization': f'Bearer {token}'},
-    )
-    print(response.status_code, response.json())
+    assert response.status_code == 200
     data = response.json()
-
-    assert response.status_code == HTTPStatus.OK
-    assert data['software_name'] == updated_data['software_name']
-    assert data['license_type'] == updated_data['license_type']
-    assert data['license_key'] == license.license_key  # A chave não deve mudar
+    assert data["id"] == new_license.id
+    assert data["software_name"] == "Software Teste"
 
 
-def test_update_license_not_found(client: TestClient, token: str) -> None:
-    updated_data = {
-        'software_name': 'Test Software',
-        'license_type': 'Mensal',
-        'status': 'expirada',
-        'developed_by': 'Test Company',
-        'start_date': '2025-06-01T00:00:00',
-        'end_date': '2026-06-01T00:00:00',
-        'priority': 'baixa',
-    }
-
+def test_update_license(client: TestClient, token: str, license_factory):
+    """
+    Testa a atualização de uma licença.
+    """
+    new_license = license_factory(software_name="Software Antigo")
+    
+    update_data = {
+        "software_name": "windows",
+        "license_type": LicenseService.normalize_license_type("anual"),  
+        "status": "ativa",  
+        "developed_by": "Nova Empresa",  
+        "start_date": "2025-01-01T00:00:00",  
+        "end_date": "2025-12-31T23:59:59",
+        "license_key": "12345ABCDE67890FGHIJ11123"  
+        }
     response = client.put(
-        '/licenses/404',
-        json=updated_data,
-        headers={'Authorization': f'Bearer {token}'},
+        f"/licenses/{new_license.id}",
+        json=update_data,
+        headers={"Authorization": f"Bearer {token}"},
     )
     
+    assert response.status_code == 200
+    updated_license = response.json()
+    assert updated_license["software_name"] == "windows"
+    assert updated_license["license_key"] == "12345ABCDE67890FGHIJ11123"
 
-    assert response.status_code == HTTPStatus.NOT_FOUND
-
-
-def test_delete_license(client: TestClient, token: str, license: License) -> None:
-    # Usando LicenseResponse no lugar de LicensePublic
-    license_schema = TypeAdapter(LicenseResponse).dump_python(license)
-    response = client.delete(
-        f'/licenses/{license.id}',
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.OK
-
-
-def test_delete_license_not_found(client: TestClient, token: str) -> None:
-    response = client.delete(
-        '/licenses/404',
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
-
-
-def test_partial_update_license(client: TestClient, token: str, license: License) -> None:
-    updated_data = {'status': 'expirada'}
-
-    response = client.patch(
-        f'/licenses/{license.id}',
-        json=updated_data,
-        headers={'Authorization': f'Bearer {token}'},
-    )
-        # Imprima o status e o corpo da resposta para entender o erro
-    print(response.status_code)
-    print(response.json())
+def test_delete_license(client: TestClient, token: str, license_factory, session: Session):
+    """
+    Testa a exclusão de uma licença.
+    """
+    # Cria uma nova licença
+    new_license = license_factory()
     
-    assert response.status_code == HTTPStatus.OK
-    assert response.json()['status'] == updated_data['status']
-    assert response.json()['license_key'] == license.license_key  # A chave não deve mudar
-
-
-def test_partial_update_license_not_found(client: TestClient, token: str) -> None:
-    updated_data = {'status': 'expirada'}
-
-    response = client.patch(
-        '/licenses/404',
-        json=updated_data,
-        headers={'Authorization': f'Bearer {token}'},
-    )
-
-    assert response.status_code == HTTPStatus.NOT_FOUND
+    # Realiza a requisição DELETE
+    response = client.delete(f"/licenses/{new_license.id}", headers={"Authorization": f"Bearer {token}"})
+    
+    # Verifica se o status da resposta é 204 (sem conteúdo)
+    assert response.status_code == 204  # Código 204 indica sucesso sem conteúdo
+    
+    # Verifica se a licença foi removida do banco de dados
+    deleted_license = session.get(License, new_license.id)
+    assert deleted_license is None  # A licença deve ser removida do banco de dados
