@@ -105,9 +105,12 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
   git clone git@github.com:Grupo9-PIV/Key-Vault.git
   ```
 
-- Crie um arquivo .env na raíz com as seguintes variáveis de ambiente (substitua valores conforme necessário):
+- Crie um arquivo .env dentro da pasta `deploy` com as seguintes variáveis de ambiente (substitua valores conforme necessário):
 
   ```env
+    # ✨ Frontend
+    VITE_API_BASE_URL=/api                                              # Endpoint base para requisições HTTP à API
+
     # 🔒 Backend
     DATABASE_URL=postgresql+psycopg://admin:admin@db:5432/KEY_VAULT     # URL do PostgreSQL
     SECRET_KEY=sua-chave-secreta                                        # Chave para tokens JWT
