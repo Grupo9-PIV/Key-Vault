@@ -11,8 +11,13 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get('/');
+        // Rota pública – não precisa enviar o token
+        const response = await api.get('/', {
+          headers: { requiresAuth: false },
+        });
+        const title = response.data.message;
         setMessage(response.data.message);
+        document.title = title;
         setError('');
       } catch (err) {
         setError('Erro ao carregar mensagem da API');
@@ -27,7 +32,6 @@ function App() {
 
   return (
     <div>
-      {/* Sistema de rotas */}
       <AppRoutes />
 
       <div
