@@ -2,13 +2,13 @@ FROM node:23-alpine AS builder
 
 WORKDIR /app
 
-COPY frontend/package*.json ./
+COPY frontend/package.json frontend/yarn.lock ./
 
-RUN npm install
+RUN yarn install --frozen-lockfile
 
 COPY frontend/ . 
 
-RUN npm run build
+RUN yarn build
 
 FROM nginx:alpine
 
