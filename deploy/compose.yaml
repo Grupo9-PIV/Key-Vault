@@ -12,7 +12,6 @@ services:
       - api
     networks:
       - frontend-network
-      - backend-network
 
   api:
     container_name: backend
