@@ -3,7 +3,8 @@ from typing import Optional  # Permite definir campos opcionais
 from pydantic import BaseModel, field_serializer, Field
 from src.enums import LicensePriority, LicenseStatus
 
-"""Esse arquivo cria o esquema pras licenças a partir do pydantic, pra validar e sinalizar os dados, ele foi feito de acordo com
+"""Esse arquivo cria o esquema pras licenças a partir do pydantic, 
+pra validar e sinalizar os dados, ele foi feito de acordo com
 o arquivo license.py, refereciando as variáveis de lá
 """
 

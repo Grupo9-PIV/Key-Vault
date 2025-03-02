@@ -246,7 +246,8 @@ class LicenseFactory(SQLAlchemyModelFactory):
 @pytest.fixture
 def license_factory(session: Session, user: User):
     """
-    Fixture que cria e retorna uma licença no banco de dados usando a LicenseFactory.
+    Fixture que cria e retorna uma licença no banco
+    de dados usando a LicenseFactory.
     """
     # Configura a sessão da LicenseFactory
     LicenseFactory._meta.sqlalchemy_session = session

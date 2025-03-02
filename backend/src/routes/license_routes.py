@@ -1,8 +1,9 @@
 from http import HTTPStatus
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
+
 from src.database import get_session
 from src.schemas.license import LicenseCreate, LicenseUpdate, LicenseResponse
 from src.services.license_service import LicenseService

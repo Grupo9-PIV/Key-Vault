@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from fastapi import HTTPException
 from .auth import (
     CredentialsException,
     ExpiredTokenException,
