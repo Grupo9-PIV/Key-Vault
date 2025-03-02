@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from src.database import get_session
-from src.schemas.license import LicenseCreate, LicenseUpdate, LicenseResponse
-from src.services.license_service import LicenseService
-from src.security import get_current_user
-from src.models import User
 from src.exceptions import LicenseNotFoundException
+from src.models import User
+from src.schemas.license import LicenseCreate, LicenseUpdate, LicenseResponse
+from src.security import get_current_user
+from src.services.license_service import LicenseService
 
 router = APIRouter(prefix='/licenses', tags=['Licenses'])
 
