@@ -10,11 +10,13 @@ from src.security import get_current_user
 from src.models import User
 from src.exceptions import LicenseNotFoundException
 
-router = APIRouter(prefix="/licenses", tags=["Licenses"])
+router = APIRouter(prefix='/licenses', tags=['Licenses'])
 
 
 # Rota para criar uma nova licença
-@router.post("/", status_code=HTTPStatus.CREATED, response_model=LicenseResponse)
+@router.post(
+    '/', status_code=HTTPStatus.CREATED, response_model=LicenseResponse
+)
 def create_license_route(
     license_data: LicenseCreate,
     db: Session = Depends(get_session),
@@ -34,7 +36,9 @@ def create_license_route(
 
 
 # Rota para buscar uma licença por ID
-@router.get("/{license_id}", status_code=HTTPStatus.OK, response_model=LicenseResponse)
+@router.get(
+    '/{license_id}', status_code=HTTPStatus.OK, response_model=LicenseResponse
+)
 def get_license_route(
     license_id: int,
     db: Session = Depends(get_session),
@@ -58,11 +62,14 @@ def get_license_route(
         # Caso haja outro erro inesperado
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail="Erro interno no servidor: " + str(e),
+            detail='Erro interno no servidor: ' + str(e),
         )
 
+
 # Rota para buscar todas as licenças
-@router.get("/", status_code=HTTPStatus.OK, response_model=List[LicenseResponse])
+@router.get(
+    '/', status_code=HTTPStatus.OK, response_model=List[LicenseResponse]
+)
 def get_all_licenses_route(
     db: Session = Depends(get_session),
     skip: int = 0,
@@ -79,12 +86,14 @@ def get_all_licenses_route(
     except Exception as e:
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail="Erro interno no servidor: " + str(e),
+            detail='Erro interno no servidor: ' + str(e),
         )
 
 
 # Rota para atualizar uma licença
-@router.put("/{license_id}", status_code=HTTPStatus.OK, response_model=LicenseResponse)
+@router.put(
+    '/{license_id}', status_code=HTTPStatus.OK, response_model=LicenseResponse
+)
 def update_license_route(
     license_id: int,
     license_data: LicenseUpdate,
@@ -97,13 +106,15 @@ def update_license_route(
     """
     try:
         # Chama a função para atualizar a licença
-        updated_license = LicenseService.update_license(db, license_id, license_data)
-        
+        updated_license = LicenseService.update_license(
+            db, license_id, license_data
+        )
+
         # Se a licença não for encontrada (None), lançar erro 404
         if not updated_license:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND,
-                detail="Licença não encontrada.",
+                detail='Licença não encontrada.',
             )
         return updated_license
     except LicenseNotFoundException as e:
@@ -116,13 +127,12 @@ def update_license_route(
         # Outros erros inesperados
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f"Erro interno no servidor: {str(e)}",
+            detail=f'Erro interno no servidor: {str(e)}',
         )
 
 
-
 # Rota para deletar uma licença
-@router.delete("/{license_id}", status_code=HTTPStatus.NO_CONTENT)
+@router.delete('/{license_id}', status_code=HTTPStatus.NO_CONTENT)
 def delete_license_route(
     license_id: int,
     db: Session = Depends(get_session),
@@ -135,11 +145,13 @@ def delete_license_route(
     try:
         success = LicenseService.delete_license(db, license_id)
         if success:
-            return Response(status_code=HTTPStatus.NO_CONTENT)  # Retorna status 204
+            return Response(
+                status_code=HTTPStatus.NO_CONTENT
+            )  # Retorna status 204
         else:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND,
-                detail="Licença não encontrada.",
+                detail='Licença não encontrada.',
             )
     except LicenseNotFoundException as e:
         raise HTTPException(
@@ -149,6 +161,5 @@ def delete_license_route(
     except Exception as e:
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail="Erro interno no servidor: " + str(e),
+            detail='Erro interno no servidor: ' + str(e),
         )
-

@@ -18,31 +18,31 @@ from .users import (
 # Exceção para licença não encontrada
 class LicenseNotFoundException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.NOT_FOUND, "License not found")
+        super().__init__(HTTPStatus.NOT_FOUND, 'License not found')
 
 
 # Exceção para licença expirada
 class LicenseExpiredException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.BAD_REQUEST, "License expired")
+        super().__init__(HTTPStatus.BAD_REQUEST, 'License expired')
 
 
 # Exceção para licença pendente
 class LicensePendingException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.FORBIDDEN, "License pending approval")
+        super().__init__(HTTPStatus.FORBIDDEN, 'License pending approval')
 
 
 # Exceção para licença desativada
 class LicenseDeactivatedException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.FORBIDDEN, "License deactivated")
+        super().__init__(HTTPStatus.FORBIDDEN, 'License deactivated')
 
 
 # Exceção para licença inválida
 class LicenseInvalidException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.BAD_REQUEST, "License invalid")
+        super().__init__(HTTPStatus.BAD_REQUEST, 'License invalid')
 
 
 __all__ = [

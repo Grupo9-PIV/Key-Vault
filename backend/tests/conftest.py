@@ -19,6 +19,7 @@ import re
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
+
 class UserFactory(Factory):
     class Meta:
         model = User
@@ -187,20 +188,24 @@ def adm_token(client, admin) -> str:
 
     return response.json()['access_token']
 
+
 fake = Faker()
+
 
 class LicenseFactory(SQLAlchemyModelFactory):
     class Meta:
         model = License
         sqlalchemy_session = None  # Inicialmente, a sessão é None
-        sqlalchemy_session_persistence = "commit"  # Salva o objeto no banco de dados
+        sqlalchemy_session_persistence = (
+            'commit'  # Salva o objeto no banco de dados
+        )
 
     # Atributos da licença
     software_name = LazyAttribute(lambda _: fake.word())
-    license_type = "trial"
+    license_type = 'trial'
     status = LicenseStatus.ATIVA
     developed_by = LazyAttribute(lambda _: fake.company())
-    version = "v1.0.0"
+    version = 'v1.0.0'
     start_date = datetime(1900, 1, 1)
     end_date = datetime(1900, 1, 1)
     priority = LicensePriority.MEDIA
@@ -218,9 +223,9 @@ class LicenseFactory(SQLAlchemyModelFactory):
     def license_key(self):
         # Regras de validação do LicenseService
         SOFTWARE_LICENSE_RULES = {
-            "windows": 25,
-            "adobe": 24,
-            "office": 20,
+            'windows': 25,
+            'adobe': 24,
+            'office': 20,
         }
 
         # Normaliza o nome do software para minúsculas
@@ -230,7 +235,9 @@ class LicenseFactory(SQLAlchemyModelFactory):
         if software_name in SOFTWARE_LICENSE_RULES:
             expected_length = SOFTWARE_LICENSE_RULES[software_name]
             # Gera uma chave alfanumérica com o tamanho esperado
-            return fake.pystr(min_chars=expected_length, max_chars=expected_length)
+            return fake.pystr(
+                min_chars=expected_length, max_chars=expected_length
+            )
 
         # Se o software não estiver na lista, gera uma chave com tamanho padrão
         return fake.pystr(min_chars=20, max_chars=25)
@@ -247,8 +254,8 @@ def license_factory(session: Session, user: User):
     def _create_license(**kwargs) -> License:
         license = LicenseFactory(
             assigned_to_id=user.id,  # Passa apenas o ID do usuário
-            manager_id=user.id,     # Passa apenas o ID do usuário   
-            **kwargs
+            manager_id=user.id,  # Passa apenas o ID do usuário
+            **kwargs,
         )
         session.add(license)
         session.commit()
