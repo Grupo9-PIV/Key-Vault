@@ -2,13 +2,16 @@ FROM node:23-alpine AS builder
 
 WORKDIR /app
 
-COPY frontend/package*.json ./
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
-RUN npm install
+COPY frontend/package.json frontend/yarn.lock ./
+
+RUN yarn install --frozen-lockfile
 
 COPY frontend/ . 
 
-RUN npm run build
+RUN yarn build
 
 FROM nginx:alpine
 

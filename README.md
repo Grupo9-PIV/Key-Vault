@@ -115,11 +115,13 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
     ALGORITHM="HS256"                                                   # Algoritmo de criptografia
     ACCESS_TOKEN_EXPIRE_MINUTES=30                                      # Tempo de expiração do token (minutos)
     ENVIRONMENT="production"                                            # Ambiente (production/development)
+    CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80           # Permite a comunicação entre os serviços
 
     # 🐘 PostgreSQL
 
     POSTGRES_USER=admin                                                 # Usuário do banco de dados
     POSTGRES_PASSWORD=admin                                             # Senha do banco de dados
+    PGUSER=admin                                                        # Igual ao POSTGRES_USER
     POSTGRES_HOST=db                                                    # Host do PostgreSQL
     POSTGRES_PORT=5432                                                  # Porta do PostgreSQL
     POSTGRES_DB=KEY_VAULT                                               # Nome do banco de dados
