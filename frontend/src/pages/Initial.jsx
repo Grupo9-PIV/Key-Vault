@@ -31,7 +31,7 @@ const Initial = () => {
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <img
                       className="p-5"
-                      src="././public/assets/usuarios.png"
+                      src="assets/usuarios.png"
                       alt="Usuários"
                     />
                   </div>
@@ -45,7 +45,7 @@ const Initial = () => {
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <img
                       className="p-5"
-                      src="././public/assets/licencas.png"
+                      src="assets/licencas.png"
                       alt="Licenças"
                     />
                   </div>
@@ -59,7 +59,7 @@ const Initial = () => {
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <img
                       className="p-5"
-                      src="././public/assets/notificacoes.png"
+                      src="assets/notificacoes.png"
                       alt="Notificações"
                     />
                   </div>
@@ -73,7 +73,7 @@ const Initial = () => {
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <img
                       className="p-5"
-                      src="././public/assets/renovacoes.png"
+                      src="assets/renovacoes.png"
                       alt="Renovações"
                     />
                   </div>

@@ -13,7 +13,7 @@ const Footer = () => {
             className="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1"
           >
             <img
-              src="././public/assets/logo.png"
+              src="assets/logo.png"
               alt="logo"
               width="175"
               height="auto"
