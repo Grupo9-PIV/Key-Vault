@@ -1,40 +1,87 @@
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
-# For more help, visit the .dockerignore file reference guide at
-# https://docs.docker.com/go/build-context-dockerignore/
-
+# ==============================
+# Arquivos de Sistema e Metadados
+# ==============================
 **/.DS_Store
+
+# ==============================
+# Artefatos e Ambientes Python
+# ==============================
 **/__pycache__
 **/.venv
-**/.classpath
-**/.dockerignore
-**/.env
+**/.env*
+**/.pytest_cache
+**/.coverage
+**/htmlcov
+**/.ruff_cache
+
+# ==============================
+# Controle de Versão
+# ==============================
 **/.git
 **/.gitignore
+
+# ==============================
+# Configurações de IDEs e Ferramentas
+# (Eclipse, VS Code, Visual Studio, etc.)
+# ==============================
+**/.classpath
 **/.project
 **/.settings
 **/.toolstarget
 **/.vs
 **/.vscode
 **/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/bin
-**/charts
+
+# ==============================
+# Arquivos do Docker e Configurações
+# ==============================
+**/.dockerignore
+**/Dockerfile*
 **/docker-compose*
 **/compose.y*ml
-**/Dockerfile*
+
+# ==============================
+# Dependências e Logs (Node.js e similares)
+# ==============================
 **/node_modules
 **/npm-debug.log
+
+# ==============================
+# Build e Artefatos de Compilação
+# ==============================
+**/bin
 **/obj
+
+# ==============================
+# Testes
+# ==============================
+**/tests
+
+# ==============================
+# Configurações e Ferramentas JavaScript
+# ==============================
+**/jest.config.js
+**/jest.setup.js
+**/prettierrc.json
+**/eslint.config.js
+
+# ==============================
+# Arquivos de Banco de Dados e Outros
+# ==============================
+**/*.dbmdl
+**/*.jfm
+**/charts
+**/*.db
+
+# ==============================
+# Segredos e Configurações de Ambiente
+# ==============================
 **/secrets.dev.yaml
 **/values.dev.yaml
-**/tests
-**/htmlcov
-**/.ruff_cache
-**/.pytest_cache
-**/.db
-**/.coverage
+
+# ==============================
+# Documentação e Licença
+# ==============================
+**/docs
 **/LICENSE
 **/README.md
