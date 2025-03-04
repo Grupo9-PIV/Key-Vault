@@ -8,6 +8,7 @@ import Notifications from './pages/Notifications';
 import Renewals from './pages/Renewals';
 import RenewalsDetail from './pages/RenewalDetail';
 import Initial from './pages/Initial';
+import Login from './pages/Login';
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/renewals" element={<Renewals />} />
         <Route path="/renewals/:id" element={<RenewalsDetail />} />
         <Route path="/initial" element={<Initial />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
