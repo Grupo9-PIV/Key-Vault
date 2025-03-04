@@ -7,7 +7,6 @@ from src.enums import LicensePriority, LicenseStatus
 
 
 class LicenseBase(BaseModel):
-
     """Modelo básico de uma licença"""
 
     software_name: str  # Nome do software

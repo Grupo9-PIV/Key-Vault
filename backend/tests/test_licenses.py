@@ -15,7 +15,6 @@ HTTP_NO_CONTENT = 204
 
 
 def test_create_license(session: Session, license_factory):
-
     """
     Testa a criação de uma licença usando a LicenseFactory.
     """
