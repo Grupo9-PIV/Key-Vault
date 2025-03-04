@@ -78,7 +78,6 @@ def test_update_license(client: TestClient, token: str, license_factory):
         'developed_by': 'Nova Empresa',
         'start_date': '2025-01-01T00:00:00',
         'end_date': '2025-12-31T23:59:59',
-        'created_at': '2025-01-01T00:00:00',
         'license_key': '12345ABCDE67890FGHIJ11123',
         'purchase_date': '2024-01-01',
     }

@@ -19,8 +19,6 @@ class LicenseBase(BaseModel):
     purchase_date: Optional[datetime] = None
     start_date: datetime  # Data de início da licença
     end_date: datetime  # Validade da licença
-    created_at: datetime
-    updated_at: Optional[datetime] = None
     license_key: Optional[str] = None  # Chave da licença
     current_usage: Optional[int] = 0  # Número de usos ou ativações
     subscription_plan: Optional[str] = None  # Plano da assinatura, ex: "Basic"
@@ -44,7 +42,6 @@ class LicenseUpdate(LicenseBase):
     status: LicenseStatus  # Status da licença (ativa, expirada)
     developed_by: str  # Marca ou empresa desenvolvedora
     version: Optional[str] = None
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
     priority: Optional[LicensePriority] = None
     version: Optional[str] = None
     purchase_date: Optional[datetime] = None
@@ -70,7 +67,6 @@ class LicensePartialUpdate(BaseModel):
     purchase_date: Optional[datetime] = None
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
     license_key: Optional[str] = None
     current_usage: Optional[int] = None
     subscription_plan: Optional[str] = None
