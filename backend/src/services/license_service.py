@@ -1,6 +1,8 @@
 import re  # precisa para validar as chaves das licenças
 from datetime import datetime
 from typing import (
+    Any,
+    Dict,
     Union,
 )  # essa função declara que uma variável pode ter vários tipos de dados
 
@@ -33,37 +35,81 @@ class LicenseService:
     ) -> Union[str, None]:
         """
         Valida e mapeia o tipo de licença.
-        - Assinatura, aceita valores como "Anual", "Mensal" ou "Trimestral".
-        - Se for freemium, aceita valores personalizados (se necessário).
-        - Caso contrário, valida se o valor é um LicenseType válido.
+        - Converte para minúsculas antes de validar.
+        - Caso contrário, valida se o valor está no enum LicenseType.
         """
         if license_type is None:
-            return None  # Aceita valores nullable
+            return None  # Aceita valores nulos
 
         if isinstance(license_type, LicenseType):
             return license_type.value  # Retorna o valor do enum como string
 
-        # Converte para minúsculas e str
-        license_type_lower = str(license_type).lower()
+        # Converte para string e minúsculas
+        license_type_lower = str(license_type).strip().lower()
 
-        # Verifica se o valor é válido
-        valid_types = ['anual', 'mensal', 'trimestral', 'freemium']
+        # Mapeia variações de entrada para fins de validação
+        valid_types = {
+            'assinatura': 'assinatura',
+            'freemium': 'freemium',
+            'perpétua': 'perpétua',
+            'corporativa': 'corporativa',
+            'educacional': 'educacional',
+            'open_source': 'open_source',
+            'pay_per_use': 'pay_per_use',
+        }
+
+        # Verifica se o tipo de licença para fins de validação
         if license_type_lower in valid_types:
-            return license_type  # Retorna o valor original
+            return valid_types[license_type_lower]
 
-        # Verifica se o valor é um LicenseType válido
+        # Verifica se está no enum LicenseType
         try:
-            return LicenseType(
-                license_type_lower
-            ).value  # Retorna o valor do enum como string
+            # Tenta converter o valor para o enum LicenseType
+            return LicenseType(license_type_lower).value
         except ValueError:
+            # Se não for um valor válido, lança uma exceção
             raise ValueError(f'Tipo de licença inválido: {license_type}')
 
     @staticmethod
-    def normalize_license_type(license_type: str) -> str:
-        if license_type in {'anual', 'mensal', 'trimestral'}:
-            return 'assinatura'
-        return license_type
+    def validate_license_status(
+        license_status: Union[str, LicenseType, None],
+    ) -> Union[str, None]:
+        """
+        Valida e mapeia o status de licença.
+        - ativa, expirada, pendente, desativada e inválida.
+        - Caso contrário, valida se o valor é um LicenseStatus válido.
+        """
+        if license_status is None:
+            return None  # Aceita valores nullable
+
+        if isinstance(license_status, LicenseStatus):
+            return license_status.value  # Retorna o valor do enum como string
+
+        # Converte para minúsculas e str
+        license_status_lower = str(license_status).lower()
+
+        # Verifica se o valor é válido
+        valid_status = [
+            'ativa',
+            'expirada',
+            'pendente',
+            'desativada',
+            'inválida',
+        ]
+        if license_status_lower in valid_status:
+            return license_status  # Retorna o valor original
+
+        # Verifica se o valor é um LicenseType válido
+        try:
+            return LicenseStatus(
+                license_status_lower
+            ).value  # Retorna o valor do enum como string
+        except ValueError:
+            raise ValueError(f'Status de licença inválido: {license_status}')
+
+    @staticmethod
+    def normalize_license_status(license_status: str) -> str:
+        return license_status
 
     @staticmethod
     # Função para criar uma nova licença
@@ -122,19 +168,21 @@ class LicenseService:
         return db.query(License).offset(skip).limit(limit).all()
 
     @staticmethod
-    # Função para atualizar uma licença
     def update_license(
         db: Session, license_id: int, license_data: LicenseUpdate
-    ):
-        # descobre se é um objeto licença pela id dela
+    ) -> License:
+        """
+        Atualiza todos os campos de uma licença.
+        Substitui os valores existentes pelos valores fornecidos.
+        """
         license_obj = (
             db.query(License).filter(License.id == license_id).first()
         )
         if not license_obj:
             raise LicenseNotFoundException()
 
-        # Converte o objeto Pydantic em um dicionário ou JSON
-        validated_data = license_data.model_dump(exclude_unset=True)
+        # Converte o objeto Pydantic em um dicionário
+        validated_data = license_data.model_dump()
 
         # Valida e mapeia o tipo de licença
         if 'license_type' in validated_data:
@@ -159,28 +207,59 @@ class LicenseService:
                     license_key,
                 ):
                     raise ValueError(
-                    f'A chave de licença do {software_name.capitalize()} '
-                    f'requer {expected_length} caracteres alfanuméricos.'
-                )
+                        f'A chave de licença do {software_name.capitalize()} '
+                        f'requer {expected_length} caracteres alfanuméricos.'
+                    )
 
-        # Lista de campos obrigatórios
-        required_fields = [
-            'software_name',
-            'license_type',
-            'status',
-            'developed_by',
-            'start_date',
-            'end_date',
-            'purchase_date',
-            'license_key',
-        ]
-
-        # Mantém os valores existentes para campos obrigatórios não fornecidos
-        for field in required_fields:
-            if field not in validated_data:
-                validated_data[field] = getattr(license_obj, field)
-
+        # Atualiza todos os campos fornecidos
         for field, value in validated_data.items():
+            setattr(license_obj, field, value)
+
+        db.commit()
+        db.refresh(license_obj)
+        return license_obj
+
+    @staticmethod
+    def partial_update_license(
+        db: Session, license_id: int, update_data: Dict[str, Any]
+    ) -> License:
+        """
+        Atualiza parcialmente licença.
+        mantendo os valores existentes para os demais.
+        """
+        license_obj = (
+            db.query(License).filter(License.id == license_id).first()
+        )
+        if not license_obj:
+            raise LicenseNotFoundException()
+
+        # Valida e mapeia o tipo de licença (se fornecido)
+        if 'license_type' in update_data:
+            update_data['license_type'] = LicenseService.validate_license_type(
+                update_data['license_type']
+            )
+
+        # Valida a nova license_key (se for fornecida)
+        if 'license_key' in update_data:
+            software_name = license_obj.software_name.lower()
+            if software_name in LicenseService.SOFTWARE_LICENSE_RULES:
+                license_key = update_data['license_key']
+                expected_length = LicenseService.SOFTWARE_LICENSE_RULES[
+                    software_name
+                ]
+
+                # Regex para validar a nova chave
+                if not re.fullmatch(
+                    r'^[A-Za-z0-9]{' + str(expected_length) + r'}$',
+                    license_key,
+                ):
+                    raise ValueError(
+                        f'A chave de licença do {software_name.capitalize()} '
+                        f'requer {expected_length} caracteres alfanuméricos.'
+                    )
+
+        # Atualiza apenas os campos fornecidos
+        for field, value in update_data.items():
             setattr(license_obj, field, value)
 
         db.commit()
@@ -216,7 +295,7 @@ class LicenseService:
         if not license:
             raise LicenseNotFoundException()
 
-        if license.end_date < datetime.now():
+        if license.end_date and license.end_date < datetime.now():
             raise LicenseExpiredException()
 
         if license.status == LicenseStatus.PENDENTE:

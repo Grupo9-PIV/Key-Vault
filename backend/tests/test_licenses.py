@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 
 from src.enums import LicensePriority, LicenseStatus, LicenseType
 from src.models import License
-from src.services.license_service import LicenseService
 
 # testes refeitos, agora com factory
 
@@ -15,7 +14,6 @@ HTTP_NO_CONTENT = 204
 
 
 def test_create_license(session: Session, license_factory):
-
     """
     Testa a criação de uma licença usando a LicenseFactory.
     """
@@ -75,12 +73,14 @@ def test_update_license(client: TestClient, token: str, license_factory):
 
     update_data = {
         'software_name': 'windows',
-        'license_type': LicenseService.normalize_license_type('anual'),
+        'license_type': 'assinatura',
         'status': 'ativa',
         'developed_by': 'Nova Empresa',
         'start_date': '2025-01-01T00:00:00',
         'end_date': '2025-12-31T23:59:59',
+        'created_at': '2025-01-01T00:00:00',
         'license_key': '12345ABCDE67890FGHIJ11123',
+        'purchase_date': '2024-01-01',
     }
     response = client.put(
         f'/licenses/{new_license.id}',
@@ -88,10 +88,40 @@ def test_update_license(client: TestClient, token: str, license_factory):
         headers={'Authorization': f'Bearer {token}'},
     )
 
+    print(response.status_code)
+    print(response.json())  # Veja o erro detalhado
+
     assert response.status_code == HTTP_OK
     updated_license = response.json()
     assert updated_license['software_name'] == 'windows'
     assert updated_license['license_key'] == '12345ABCDE67890FGHIJ11123'
+
+
+def test_partial_update_license(
+    client: TestClient, token: str, license_factory
+):
+    """
+    Testa a atualização parcial de uma licença (PATCH).
+    """
+    new_license = license_factory(
+        software_name='windows',
+        status=LicenseStatus.EXPIRADA,
+    )
+
+    partial_update_data = {'status': 'ativa', 'developed_by': 'Nova Empresa'}
+
+    response = client.patch(
+        f'/licenses/{new_license.id}',
+        json=partial_update_data,
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTP_OK, response.json()
+
+    updated_license = response.json()
+    assert updated_license['status'] == 'ativa'
+    assert updated_license['developed_by'] == 'Nova Empresa'
+    assert updated_license['software_name'] == 'windows'
 
 
 def test_delete_license(
