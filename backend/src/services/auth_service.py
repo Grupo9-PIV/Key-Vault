@@ -13,12 +13,12 @@ class AuthService:
         user = AuthService._get_user_or_raise(session, form_data)
 
         access_token = create_access_token(data={'sub': user.email})
-        return {'access_token': access_token}
+        return {'user_id': user.id, 'access_token': access_token}
 
     @staticmethod
     def refresh_access_token(user: T_CurrentUser):
         new_access_token = create_access_token(data={'sub': user.email})
-        return {'access_token': new_access_token}
+        return {'user_id': user.id, 'access_token': new_access_token}
 
     # helper functions (DRY)
     @staticmethod
