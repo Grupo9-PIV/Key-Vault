@@ -71,12 +71,28 @@ footer {
     margin: 20px;   
 }
 
-li{
-    text-align: justify;
-}
+
 
 .navbar{
     background-color: #313131;
 }
+
+.feature-ul{
+    width: 30%;        
+    margin: 10px;
+    background: white;
+    padding: 20px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+
+}
+
+li{
+    text-align: left;
+    font-size: 15px;
+    margin: auto;
+    line-height: 1.5;
+    text-align: justify;
+}
+
 
 
