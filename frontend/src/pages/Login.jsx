@@ -18,9 +18,9 @@ const Login = () => {
       const isFirstLogin = localStorage.getItem('isFirstLogin') === 'true';
 
       if (isFirstLogin) {
-        navigate('/change-password'); // Redireciona para a tela de mudança de senha
+        navigate('/ChangePassword'); // Redireciona para a tela de mudança de senha
       } else {
-        navigate('/'); // Redireciona para a página inicial
+        navigate('/Initial'); // Redireciona para a página inicial
       }
 
       // Marca o usuário como autenticado
@@ -44,7 +44,7 @@ const Login = () => {
                 <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"/>
                 <label for="floatingInput">E-mail</label>
               </div>
-              <div class="form-floating form-w mx-auto">
+              <div class="form-floating form-w mx-auto mt-3">
                 <input type="password" className="form-control" id="floatingPassword" placeholder="Password"/>
                 <label for="floatingPassword">Senha</label>
               </div>
