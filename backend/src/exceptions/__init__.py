@@ -1,59 +1,61 @@
 from http import HTTPStatus
 
-from fastapi import HTTPException
-
-from .license_exceptions import (
-    LicenseCodeAlreadyExistsException,  # para a exceção
+from .auth import (
+    CredentialsException,
+    ExpiredTokenException,
+    InvalidTokenException,
+    WrongEmailOrPasswordException,
+)
+from .base import AppException
+from .users import (
+    EmailAlreadyExistsException,
+    PermissionDeniedException,
+    UserNotFoundException,
 )
 
 
-class AppException(HTTPException):
-    def __init__(self, status_code: int, detail: str):
-        super().__init__(status_code=status_code, detail=detail)
-
-
-class UserNotFoundException(AppException):
+# Exceção para licença não encontrada
+class LicenseNotFoundException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.NOT_FOUND, 'User not found')
+        super().__init__(HTTPStatus.NOT_FOUND, 'License not found')
 
 
-class PermissionDeniedException(AppException):
+# Exceção para licença expirada
+class LicenseExpiredException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.FORBIDDEN, 'Not enough permissions')
+        super().__init__(HTTPStatus.BAD_REQUEST, 'License expired')
 
 
-class EmailAlreadyExistsException(AppException):
+# Exceção para licença pendente
+class LicensePendingException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.BAD_REQUEST, 'Email already exists')
+        super().__init__(HTTPStatus.FORBIDDEN, 'License pending approval')
 
 
-class CredentialsException(AppException):
+# Exceção para licença desativada
+class LicenseDeactivatedException(AppException):
     def __init__(self):
-        super().__init__(
-            HTTPStatus.UNAUTHORIZED, 'Could not validate credentials'
-        )
-        self.headers = {'WWW-Authenticate': 'Bearer'}
+        super().__init__(HTTPStatus.FORBIDDEN, 'License deactivated')
 
 
-class ExpiredTokenException(AppException):
+# Exceção para licença inválida
+class LicenseInvalidException(AppException):
     def __init__(self):
-        super().__init__(HTTPStatus.UNAUTHORIZED, 'Token has expired')
-        self.headers = {'WWW-Authenticate': 'Bearer'}
-
-
-class InvalidTokenException(AppException):
-    def __init__(self):
-        super().__init__(HTTPStatus.UNAUTHORIZED, 'Invalid token')
-        self.headers = {'WWW-Authenticate': 'Bearer'}
+        super().__init__(HTTPStatus.BAD_REQUEST, 'License invalid')
 
 
 __all__ = [
     'AppException',
-    'UserNotFoundException',
-    'PermissionDeniedException',
-    'EmailAlreadyExistsException',
     'CredentialsException',
     'ExpiredTokenException',
     'InvalidTokenException',
-    'LicenseCodeAlreadyExistsException',
+    'PermissionDeniedException',
+    'UserNotFoundException',
+    'EmailAlreadyExistsException',
+    'WrongEmailOrPasswordException',
+    'LicenseNotFoundException',
+    'LicenseExpiredException',
+    'LicensePendingException',
+    'LicenseDeactivatedException',
+    'LicenseInvalidException',
 ]

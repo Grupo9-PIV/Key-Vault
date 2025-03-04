@@ -1,8 +1,11 @@
 from collections.abc import Generator
 from datetime import datetime
 
+import factory
 import pytest
 from factory import Factory, LazyAttribute, Sequence
+from factory.alchemy import SQLAlchemyModelFactory
+from faker import Faker
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
@@ -10,7 +13,7 @@ from testcontainers.postgres import PostgresContainer
 
 from src.app import app
 from src.database import get_session, table_registry
-from src.enums import UserRole
+from src.enums import LicensePriority, LicenseStatus, UserRole
 from src.models import AuditLog, License, Notification, RenewalRequest, User
 from src.security import get_password_hash
 
@@ -182,3 +185,80 @@ def adm_token(client, admin) -> str:
     )
 
     return response.json()['access_token']
+
+
+fake = Faker()
+
+
+class LicenseFactory(SQLAlchemyModelFactory):
+    class Meta:
+        model = License
+        sqlalchemy_session = None  # Inicialmente, a sessão é None
+        sqlalchemy_session_persistence = (
+            'commit'  # Salva o objeto no banco de dados
+        )
+
+    # Atributos da licença
+    software_name = LazyAttribute(lambda _: fake.word())
+    license_type = 'trial'
+    status = LicenseStatus.ATIVA
+    developed_by = LazyAttribute(lambda _: fake.company())
+    version = 'v1.0.0'
+    start_date = datetime(1900, 1, 1)
+    end_date = datetime(1900, 1, 1)
+    priority = LicensePriority.MEDIA
+    purchase_date = datetime(1900, 1, 1)
+    current_usage = 0
+    subscription_plan = None
+    conditions = None
+
+    # Relacionamentos (assigned_to e manager)
+    assigned_to_id = factory.LazyAttribute(lambda obj: obj.assigned_to.id)
+    manager_id = factory.LazyAttribute(lambda obj: obj.manager.id)
+
+    # Gera uma license_key válida com base no software_name
+    @factory.lazy_attribute
+    def license_key(self):
+        # Regras de validação do LicenseService
+        SOFTWARE_LICENSE_RULES = {
+            'windows': 25,
+            'adobe': 24,
+            'office': 20,
+        }
+
+        # Normaliza o nome do software para minúsculas
+        software_name = self.software_name.lower()
+
+        # Verifica se o software está na lista de regras
+        if software_name in SOFTWARE_LICENSE_RULES:
+            expected_length = SOFTWARE_LICENSE_RULES[software_name]
+            # Gera uma chave alfanumérica com o tamanho esperado
+            return fake.pystr(
+                min_chars=expected_length, max_chars=expected_length
+            )
+
+        # Se o software não estiver na lista, gera uma chave com tamanho padrão
+        return fake.pystr(min_chars=20, max_chars=25)
+
+
+@pytest.fixture
+def license_factory(session: Session, user: User):
+    """
+    Fixture que cria e retorna uma licença no banco
+    de dados usando a LicenseFactory.
+    """
+    # Configura a sessão da LicenseFactory
+    LicenseFactory._meta.sqlalchemy_session = session
+
+    def _create_license(**kwargs) -> License:
+        license = LicenseFactory(
+            assigned_to_id=user.id,  # Passa apenas o ID do usuário
+            manager_id=user.id,  # Passa apenas o ID do usuário
+            **kwargs,
+        )
+        session.add(license)
+        session.commit()
+        session.refresh(license)
+        return license
+
+    return _create_license

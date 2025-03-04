@@ -38,6 +38,12 @@ Este projeto utiliza **React** com **Vite** como bundler, **Yarn** como gerencia
    yarn install
    ```
 
+5. Adicione um arquivo `.env` na pasta `frontend` com os valores:
+
+   ```env
+   VITE_API_BASE_URL=http://localhost:8080/api
+   ```
+
 ---
 
 ## Execução do Projeto
