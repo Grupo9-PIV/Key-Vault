@@ -19,6 +19,7 @@ class UserPublic(BaseModel):
     email: EmailStr
     role: UserRole
     department: str
+    is_active: bool
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -29,6 +30,7 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     role: Optional[UserRole] = None
     department: Optional[str] = None
+    is_active: Optional[bool] = None
 
     class Config:
         extra = 'forbid'  # evita campos extras não definidos
