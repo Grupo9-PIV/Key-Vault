@@ -1,7 +1,12 @@
 from random import choice
 from typing import Any
 
-from src.enums import UserRole
+from src.enums import (
+    LicensePriority,
+    LicenseStatus,
+    LicenseType,
+    UserRole,
+)
 from src.types.password import (
     INCLUDES_LOWERCASE,
     INCLUDES_NUMBERS,
@@ -19,6 +24,19 @@ def get_user_data() -> dict[str, Any]:
         'name': fake.name(),
         'role': choice(list(UserRole)).value,
         'department': fake.word(),
+    }
+
+
+def get_license_data() -> dict[str, Any]:
+    return {
+        'software_name': fake.word().title() + ' Pro',
+        'license_type': choice(list(LicenseType)).value,
+        'status': choice(list(LicenseStatus)).value,
+        'developed_by': fake.company(),
+        'purchase_date': fake.date_time().isoformat(),
+        'start_date': fake.date_time().isoformat(),
+        'end_date': fake.date_time().isoformat(),
+        'priority': choice(list(LicensePriority)).value,
     }
 
 

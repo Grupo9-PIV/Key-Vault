@@ -86,7 +86,13 @@ def create_license(session: Session) -> Callable[..., License]:
 
 @pytest.fixture
 def mock_license(create_license) -> License:
-    return create_license()
+    return create_license(
+        with_version=True,
+        with_license_key=True,
+        with_current_usage=True,
+        with_subscription_plan=True,
+        with_conditions=True,
+    )
 
 
 @pytest.fixture
