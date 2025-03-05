@@ -1,5 +1,4 @@
-from collections.abc import Generator
-from datetime import datetime
+from collections.abc import Callable, Generator
 
 import pytest
 from fastapi.testclient import TestClient
@@ -47,7 +46,7 @@ def client(session: Session) -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture
-def create_user(session: Session):
+def create_user(session: Session) -> Callable[..., User]:
     def _create_user(**kwargs) -> User:
         user = UserFactory(**kwargs)
 
@@ -62,21 +61,19 @@ def create_user(session: Session):
 
 
 @pytest.fixture
-def user(create_user):
+def user(create_user) -> User:
     return create_user(role=UserRole.USER)
 
 
 @pytest.fixture
-def admin(create_user):
+def admin(create_user) -> User:
     return create_user(admin=True)  # Usa o trait 'admin'
 
 
 @pytest.fixture
-def create_factory(session: Session):
+def create_license(session: Session) -> Callable[..., License]:
     def _create_license(**kwargs) -> License:
-        mock_license = LicenseFactory(
-            **kwargs,
-        )
+        mock_license = LicenseFactory(**kwargs)
 
         session.add(mock_license)
         session.commit()
@@ -88,27 +85,8 @@ def create_factory(session: Session):
 
 
 @pytest.fixture
-def mock_license(session: Session, user: User) -> License:
-    mock_license = License(
-        assigned_to_id=user.id,
-        manager_id=user.id,
-        software_name='XYZ Soft',
-        license_type='trial',
-        status='ativa',
-        developed_by='Test Soft',
-        version='v1.0.0',
-        purchase_date=datetime(1900, 1, 1),
-        start_date=datetime(1900, 1, 1),
-        end_date=datetime(1900, 1, 1),
-        license_key=None,
-        current_usage=None,
-        subscription_plan=None,
-        conditions=None,
-    )
-    session.add(mock_license)
-    session.commit()
-
-    return mock_license
+def mock_license(create_license) -> License:
+    return create_license()
 
 
 @pytest.fixture
