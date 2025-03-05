@@ -22,11 +22,11 @@ def get_user_data() -> dict[str, Any]:
     }
 
 
-def get_fake_password() -> str:
+def get_fake_password(**kwargs) -> str:
     return fake.password(
-        length=MIN_LENGTH,
-        special_chars=INCLUDES_SPECIAL,
-        digits=INCLUDES_NUMBERS,
-        lower_case=INCLUDES_LOWERCASE,
-        upper_case=INCLUDES_UPPERCASE,
+        length=kwargs.get('length', MIN_LENGTH),
+        special_chars=kwargs.get('special_chars', INCLUDES_SPECIAL),
+        digits=kwargs.get('digits', INCLUDES_NUMBERS),
+        lower_case=kwargs.get('lower_case', INCLUDES_LOWERCASE),
+        upper_case=kwargs.get('upper_case', INCLUDES_UPPERCASE),
     )

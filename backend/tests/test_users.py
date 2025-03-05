@@ -7,6 +7,7 @@ from sqlalchemy.sql import select
 from src.models import User
 from src.schemas import UserPublic
 from src.security import verify_password
+from src.types.password import MAX_LENGTH, MIN_LENGTH
 from tests.factory.faker import fake
 from tests.utils import get_fake_password, get_user_data
 
@@ -61,6 +62,98 @@ def test_create_user_missing_required_fields(client: TestClient) -> None:
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert any(error['loc'] == ['body', 'password'] for error in errors)
+
+
+def test_create_user_pwd_too_short(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(length=MIN_LENGTH - 1)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('Must be between' in msg for msg in error_messages)
+
+
+def test_create_user_pwd_too_long(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(length=MAX_LENGTH + 1)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('Must be between' in msg for msg in error_messages)
+
+
+def test_create_user_pwd_no_digits(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(digits=False)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('At least one number required' in msg for msg in error_messages)
+
+
+def test_create_user_pwd_no_upper(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(upper_case=False)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('At least one uppercase' in msg for msg in error_messages)
+
+
+def test_create_user_pwd_no_lower(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(lower_case=False)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('At least one lowercase' in msg for msg in error_messages)
+
+
+def test_create_user_pwd_no_special(client: TestClient) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(special_chars=False)
+
+    response = client.post('/users', json=user_data)
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any('At least one special' in msg for msg in error_messages)
+
+
+def test_update_pwd_multiple_errors(
+    client: TestClient, token: str, user: User
+) -> None:
+    user_data = get_user_data()
+    user_data['password'] = get_fake_password(
+        digits=False, special_chars=False)
+
+    response = client.put(
+        f'/users/{user.id}',
+        json=user_data,
+        headers={'Authorization': f'Bearer {token}'}
+    )
+    errors = response.json()['detail']
+    error_messages = [error['msg'] for error in errors]
+
+    expected_msg = 'At least one number required | At least one special'
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert any(expected_msg in msg for msg in error_messages)
 
 
 def test_read_users(client: TestClient, user: User, token: str) -> None:
