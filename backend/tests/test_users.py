@@ -44,7 +44,7 @@ def test_create_user_duplicate_email(client: TestClient, user: User) -> None:
 
 def test_create_user_invalid_email(client: TestClient) -> None:
     user_data = get_user_data()
-    user_data['email'] = 'invalid-email'  # email já existente
+    user_data['email'] = 'invalid-email'  # email inválido
 
     response = client.post('/users', json=user_data)
     errors = response.json()['detail']
