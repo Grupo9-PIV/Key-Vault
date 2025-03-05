@@ -35,13 +35,13 @@ def validate_password(v: SecretStr) -> SecretStr:
     password = v.get_secret_value()
     errors = []
 
-    if len(password) < MIN_LENGTH:
-        errors.append(f'Must be at least {MIN_LENGTH} characters')
-    if len(password) > MAX_LENGTH:
-        errors.append(f'Must be less than {MAX_LENGTH} characters')
+    if len(password) < MIN_LENGTH or len(password) > MAX_LENGTH:
+        errors.append(
+            f'Must be between {MIN_LENGTH} and {MAX_LENGTH} characters'
+        )
 
     if errors:  # lança erro antes para evitar mensagem muito grande
-        raise ValueError(' | '.join(errors))
+        raise ValueError(errors[0])
 
     if INCLUDES_NUMBERS and not any(c.isdigit() for c in password):
         errors.append('At least one number required')
