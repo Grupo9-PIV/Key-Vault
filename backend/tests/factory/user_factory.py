@@ -1,5 +1,5 @@
 import factory
-from factory import Factory, LazyAttribute
+from factory import Factory, LazyAttribute, LazyFunction
 from factory.fuzzy import FuzzyChoice
 
 from src.enums import UserRole
@@ -14,13 +14,13 @@ class UserFactory(Factory):
     class Meta:
         model = User
 
-    name = LazyAttribute(lambda _: fake.name())
-    email = LazyAttribute(lambda _: fake.email())
+    name = LazyFunction(fake.name)
+    email = LazyFunction(fake.email)
     password_hash = LazyAttribute(
         lambda obj: get_password_hash(obj.plain_password)
     )
     role = FuzzyChoice(UserRole)
-    department = LazyAttribute(lambda _: fake.word())
+    department = LazyFunction(fake.word)
 
     class Params:
         plain_password = DEFAULT_TEST_PWD
