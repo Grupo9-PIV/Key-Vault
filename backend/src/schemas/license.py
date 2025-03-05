@@ -1,13 +1,12 @@
 from datetime import datetime
 from typing import Optional  # Permite definir campos opcionais
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel
 
 from src.enums import LicensePriority, LicenseStatus
 
 
 class LicenseBase(BaseModel):
-
     """Modelo básico de uma licença"""
 
     software_name: str  # Nome do software
@@ -20,7 +19,7 @@ class LicenseBase(BaseModel):
         LicensePriority.MEDIA
     )  # Prioridade da licença, padrão "média"
     version: Optional[str] = '1.0.0'
-    purchase_date: Optional[datetime] = Field(default_factory=datetime.now)
+    purchase_date: datetime
     current_usage: Optional[int] = 0  # Número de usos ou ativações
     subscription_plan: Optional[str] = None  # Plano da assinatura, ex: "Basic"
     conditions: Optional[str] = None  # Condições da licença
@@ -30,9 +29,7 @@ class LicenseBase(BaseModel):
 
 
 class LicenseCreate(LicenseBase):
-    software_name: str
-    license_key: str  # obrigatório
-    manager_id: int  # ID do gerente da licença
+    ...
 
 
 class LicenseUpdate(LicenseBase):
@@ -61,18 +58,6 @@ class LicenseResponse(LicenseBase):
     id: int
     created_at: datetime
     updated_at: Optional[datetime] = None
-
-    @field_serializer(
-        'created_at', 'updated_at', 'start_date', 'end_date', 'purchase_date'
-    )
-    @staticmethod
-    def serialize_dates(value: datetime) -> str:
-        return value.isoformat() if value else None
-
-    @field_serializer('priority', 'status')
-    @staticmethod
-    def serialize_enum(value) -> str:
-        return value.value if value else None
 
     class Config:
         from_attributes = True

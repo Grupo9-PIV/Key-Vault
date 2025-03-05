@@ -18,8 +18,8 @@ class User:
     name: Mapped[str]
     role: Mapped[UserRole] = mapped_column(Enum(UserRole))
     department: Mapped[str] = mapped_column(nullable=True)
-    is_first_login: Mapped[bool] = mapped_column(
-        init=False, server_default=text('true')
+    is_active: Mapped[bool] = mapped_column(
+        init=False, server_default=text('false')
     )
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
