@@ -141,12 +141,13 @@ def test_update_pwd_multiple_errors(
 ) -> None:
     user_data = get_user_data()
     user_data['password'] = get_fake_password(
-        digits=False, special_chars=False)
+        digits=False, special_chars=False
+    )
 
     response = client.put(
         f'/users/{user.id}',
         json=user_data,
-        headers={'Authorization': f'Bearer {token}'}
+        headers={'Authorization': f'Bearer {token}'},
     )
     errors = response.json()['detail']
     error_messages = [error['msg'] for error in errors]
