@@ -1,10 +1,6 @@
 import re  # precisa para validar as chaves das licenças
 from datetime import datetime
-from typing import (
-    Any,
-    Dict,
-    Union,
-)  # essa função declara que uma variável pode ter vários tipos de dados
+from typing import Any, Dict
 
 from fastapi import Response
 from sqlalchemy.orm import Session
@@ -16,7 +12,7 @@ from src.exceptions import (
     LicenseNotFoundException,
     LicensePendingException,
 )
-from src.models.license import License, LicenseStatus, LicenseType
+from src.models.license import License, LicenseStatus
 from src.schemas.license import LicenseCreate, LicenseUpdate
 
 
@@ -30,99 +26,12 @@ class LicenseService:
     }
 
     @staticmethod
-    def validate_license_type(
-        license_type: Union[str, LicenseType, None],
-    ) -> Union[str, None]:
-        """
-        Valida e mapeia o tipo de licença.
-        - Converte para minúsculas antes de validar.
-        - Caso contrário, valida se o valor está no enum LicenseType.
-        """
-        if license_type is None:
-            return None  # Aceita valores nulos
-
-        if isinstance(license_type, LicenseType):
-            return license_type.value  # Retorna o valor do enum como string
-
-        # Converte para string e minúsculas
-        license_type_lower = str(license_type).strip().lower()
-
-        # Mapeia variações de entrada para fins de validação
-        valid_types = {
-            'assinatura': 'assinatura',
-            'freemium': 'freemium',
-            'perpétua': 'perpétua',
-            'corporativa': 'corporativa',
-            'educacional': 'educacional',
-            'open_source': 'open_source',
-            'pay_per_use': 'pay_per_use',
-        }
-
-        # Verifica se o tipo de licença para fins de validação
-        if license_type_lower in valid_types:
-            return valid_types[license_type_lower]
-
-        # Verifica se está no enum LicenseType
-        try:
-            # Tenta converter o valor para o enum LicenseType
-            return LicenseType(license_type_lower).value
-        except ValueError:
-            # Se não for um valor válido, lança uma exceção
-            raise ValueError(f'Tipo de licença inválido: {license_type}')
-
-    @staticmethod
-    def validate_license_status(
-        license_status: Union[str, LicenseType, None],
-    ) -> Union[str, None]:
-        """
-        Valida e mapeia o status de licença.
-        - ativa, expirada, pendente, desativada e inválida.
-        - Caso contrário, valida se o valor é um LicenseStatus válido.
-        """
-        if license_status is None:
-            return None  # Aceita valores nullable
-
-        if isinstance(license_status, LicenseStatus):
-            return license_status.value  # Retorna o valor do enum como string
-
-        # Converte para minúsculas e str
-        license_status_lower = str(license_status).lower()
-
-        # Verifica se o valor é válido
-        valid_status = [
-            'ativa',
-            'expirada',
-            'pendente',
-            'desativada',
-            'inválida',
-        ]
-        if license_status_lower in valid_status:
-            return license_status  # Retorna o valor original
-
-        # Verifica se o valor é um LicenseType válido
-        try:
-            return LicenseStatus(
-                license_status_lower
-            ).value  # Retorna o valor do enum como string
-        except ValueError:
-            raise ValueError(f'Status de licença inválido: {license_status}')
-
-    @staticmethod
-    def normalize_license_status(license_status: str) -> str:
-        return license_status
-
-    @staticmethod
     # Função para criar uma nova licença
     def create_license(db: Session, license_data: LicenseCreate):
         # Criação da nova licença
 
         # Converte o objeto Pydantic em um dicionário ou JSON
         validated_data = license_data.model_dump()
-
-        # Valida e mapeia o tipo de licença
-        validated_data['license_type'] = LicenseService.validate_license_type(
-            validated_data.get('license_type')
-        )
 
         # Normaliza o nome do software para minúsculas
         software_name = validated_data['software_name'].lower()
@@ -184,14 +93,6 @@ class LicenseService:
         # Converte o objeto Pydantic em um dicionário
         validated_data = license_data.model_dump()
 
-        # Valida e mapeia o tipo de licença
-        if 'license_type' in validated_data:
-            validated_data['license_type'] = (
-                LicenseService.validate_license_type(
-                    validated_data['license_type']
-                )
-            )
-
         # Valida a nova license_key (se for fornecida)
         if 'license_key' in validated_data:
             software_name = license_obj.software_name.lower()
@@ -232,12 +133,6 @@ class LicenseService:
         )
         if not license_obj:
             raise LicenseNotFoundException()
-
-        # Valida e mapeia o tipo de licença (se fornecido)
-        if 'license_type' in update_data:
-            update_data['license_type'] = LicenseService.validate_license_type(
-                update_data['license_type']
-            )
 
         # Valida a nova license_key (se for fornecida)
         if 'license_key' in update_data:

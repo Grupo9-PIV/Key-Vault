@@ -16,7 +16,7 @@ class LicenseBase(BaseModel):
     status: LicenseStatus  # Status da licença (ativa, expirada)
     developed_by: str  # Marca ou empresa desenvolvedora
     version: Optional[str] = None
-    purchase_date: Optional[datetime] = None
+    purchase_date: datetime
     start_date: datetime  # Data de início da licença
     end_date: datetime  # Validade da licença
     license_key: Optional[str] = None  # Chave da licença
@@ -37,21 +37,21 @@ class LicenseUpdate(LicenseBase):
     # Schema para atualização de uma licença
     assigned_to_id: Optional[int] = Field(None, gt=0)  # Ajuste para > 0
     manager_id: Optional[int] = Field(None, gt=0)  # Ajusta para > 0
-    software_name: str  # Nome do software
-    license_type: LicenseType  # Tipo de licença (vitalícia, anual, mensal)
+    software_name: Optional[str] = None  # Nome do software
+    license_type: Optional[str] = (
+        None  # Tipo de licença (vitalícia, anual, mensal)
+    )
     status: LicenseStatus  # Status da licença (ativa, expirada)
-    developed_by: str  # Marca ou empresa desenvolvedora
+    developed_by: Optional[str] = None  # Marca ou empresa desenvolvedora
     version: Optional[str] = None
     priority: Optional[LicensePriority] = None
     version: Optional[str] = None
     purchase_date: Optional[datetime] = None
     license_key: Optional[str] = None  # Chave da licença
-    current_usage: Optional[int] = 0  # Número de usos ou ativações
+    current_usage: Optional[int] = None  # Número de usos ou ativações
     subscription_plan: Optional[str] = None  # Plano da assinatura, ex: "Basic"
     conditions: Optional[str] = None  # Condições da licença
-    priority: Optional[LicensePriority] = (
-        LicensePriority.MEDIA
-    )  # Prioridade da licença, padrão "média"
+    priority: Optional[LicensePriority] = None
 
 
 class LicensePartialUpdate(BaseModel):
