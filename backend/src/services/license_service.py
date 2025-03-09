@@ -210,9 +210,6 @@ class LicenseService:
                         f'A chave de licença do {software_name.capitalize()} '
                         f'requer {expected_length} caracteres alfanuméricos.'
                     )
-                        f'A chave de licença do {software_name.capitalize()} '
-                        f'requer {expected_length} caracteres alfanuméricos.'
-                    )
 
         # Atualiza todos os campos fornecidos
         for field, value in validated_data.items():
