@@ -118,7 +118,6 @@ def renewal_request(
         manager_id=None,
         reason=None,
         feedback=None,
-        status='pendente',
     )
 
     session.add(renewal_request)
