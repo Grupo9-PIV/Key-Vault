@@ -4,6 +4,7 @@ from .renewal_request import (
     RenewalRequestList,
     RenewalRequestPublic,
     RenewalRequestUpdate,
+    RenewalRequestFilters,
 )
 from .token import Token
 from .user import UserList, UserPublic, UserSchema, UserUpdate
@@ -19,4 +20,5 @@ __all__ = [
     'RenewalRequestPublic',
     'RenewalRequestList',
     'RenewalRequestUpdate',
+    'RenewalRequestFilters'
 ]

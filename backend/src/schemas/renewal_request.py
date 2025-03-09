@@ -30,3 +30,12 @@ class RenewalRequestPublic(BaseModel):
 
 class RenewalRequestList(BaseModel):
     requests: list[RenewalRequestPublic]
+
+
+class RenewalRequestFilters(BaseModel):
+    requested_by: Optional[int] = None
+    managed_by: Optional[int] = None
+    license_name: Optional[str] = None
+
+    class Config:
+        extra = 'forbid'
