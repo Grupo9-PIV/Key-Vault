@@ -1,12 +1,12 @@
 from .message import Message
-from .token import Token
-from .user import UserList, UserPublic, UserSchema, UserUpdate
 from .renewal_request import (
     RenewalRequestCreate,
-    RenewalRequestPublic,
     RenewalRequestList,
+    RenewalRequestPublic,
     RenewalRequestUpdate,
 )
+from .token import Token
+from .user import UserList, UserPublic, UserSchema, UserUpdate
 
 __all__ = [
     'Message',
