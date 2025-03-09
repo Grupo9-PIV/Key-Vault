@@ -6,19 +6,16 @@ from sqlalchemy.orm import Session
 from src.enums import LicensePriority, LicenseStatus, LicenseType
 from src.models import License
 
-# testes refeitos, agora com factory
-
-# constantes pra msg HTTP
+# Constantes para mensagens HTTP
 HTTP_OK = 200
 HTTP_NO_CONTENT = 204
 
 
-def test_create_license(session: Session, license_factory):
+def test_create_license(session: Session, create_license):
     """
     Testa a criação de uma licença usando a LicenseFactory.
     """
-
-    new_license = license_factory(
+    new_license = create_license(
         software_name='Test Software',
         license_type=LicenseType.TRIAL,
         status=LicenseStatus.ATIVA,
@@ -49,11 +46,11 @@ def test_get_licenses(client: TestClient, token: str):
     assert isinstance(data, list)
 
 
-def test_get_license_by_id(client: TestClient, token: str, license_factory):
+def test_get_license_by_id(client: TestClient, token: str, create_license):
     """
     Testa a busca de uma licença específica pelo ID.
     """
-    new_license = license_factory(software_name='Software Teste')
+    new_license = create_license(software_name='Software Teste')
     response = client.get(
         f'/licenses/{new_license.id}',
         headers={'Authorization': f'Bearer {token}'},
@@ -65,11 +62,11 @@ def test_get_license_by_id(client: TestClient, token: str, license_factory):
     assert data['software_name'] == 'Software Teste'
 
 
-def test_update_license(client: TestClient, token: str, license_factory):
+def test_update_license(client: TestClient, token: str, create_license):
     """
     Testa a atualização de uma licença.
     """
-    new_license = license_factory(software_name='Software Antigo')
+    new_license = create_license(software_name='Software Antigo')
 
     update_data = {
         'software_name': 'windows',
@@ -98,12 +95,12 @@ def test_update_license(client: TestClient, token: str, license_factory):
 
 
 def test_partial_update_license(
-    client: TestClient, token: str, license_factory
+    client: TestClient, token: str, create_license
 ):
     """
     Testa a atualização parcial de uma licença (PATCH).
     """
-    new_license = license_factory(
+    new_license = create_license(
         software_name='windows',
         status=LicenseStatus.EXPIRADA,
     )
@@ -125,13 +122,13 @@ def test_partial_update_license(
 
 
 def test_delete_license(
-    client: TestClient, token: str, license_factory, session: Session
+    client: TestClient, token: str, create_license, session: Session
 ):
     """
     Testa a exclusão de uma licença.
     """
     # Cria uma nova licença
-    new_license = license_factory()
+    new_license = create_license()
 
     # Realiza a requisição DELETE
     response = client.delete(
