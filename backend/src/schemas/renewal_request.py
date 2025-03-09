@@ -7,7 +7,7 @@ from src.enums import RequestStatus
 
 class RenewalRequestCreate(BaseModel):
     license_id: int
-    reason: Optional[str]
+    reason: Optional[str] = None
 
 
 class RenewalRequestUpdate(BaseModel):
