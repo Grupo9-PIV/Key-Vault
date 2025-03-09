@@ -16,7 +16,7 @@ from src.types import (
     T_Session,
 )
 
-router = APIRouter(prefix='/renewal-requests', tags=['renewal_requests'])
+router = APIRouter(prefix='/renewal-requests', tags=['Renewal Requests'])
 
 
 @router.post(
