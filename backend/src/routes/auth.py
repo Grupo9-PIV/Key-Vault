@@ -6,7 +6,7 @@ from src.schemas import Token
 from src.services import AuthService
 from src.types import T_CurrentUser, T_OAuth2Form, T_Session
 
-router = APIRouter(prefix='/auth', tags=['auth'])
+router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
 @router.post('/token', status_code=HTTPStatus.OK, response_model=Token)

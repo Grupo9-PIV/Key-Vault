@@ -10,7 +10,7 @@ from src.app import app
 from src.database import get_session, table_registry
 from src.models import AuditLog, License, Notification, RenewalRequest, User
 from tests.factory import LicenseFactory, UserFactory
-from tests.factory.user_factory import DEFAULT_TEST_PWD, UserRole
+from tests.factory.user_factory import UserRole
 
 
 @pytest.fixture(scope='session')
@@ -54,7 +54,6 @@ def create_user(session: Session) -> Callable[..., User]:
         session.commit()
         session.refresh(user)
 
-        user.password = kwargs.get('plain_password', DEFAULT_TEST_PWD)
         return user
 
     return _create_user
@@ -119,7 +118,6 @@ def renewal_request(
         manager_id=None,
         reason=None,
         feedback=None,
-        status='pendente',
     )
 
     session.add(renewal_request)

@@ -28,8 +28,7 @@ class LicenseBase(BaseModel):
     manager_id: Optional[int] = None  # ID do gerente da licença
 
 
-class LicenseCreate(LicenseBase):
-    ...
+class LicenseCreate(LicenseBase): ...
 
 
 class LicenseUpdate(LicenseBase):
