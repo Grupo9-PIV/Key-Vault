@@ -3,13 +3,13 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 from src.enums import UserRole
-from src.types import T_Password
+from src.types import PasswordType
 
 
 class UserSchema(BaseModel):
     name: str
     email: EmailStr
-    password: T_Password
+    password: PasswordType
     role: UserRole
     department: str
 
@@ -28,7 +28,7 @@ class UserPublic(BaseModel):
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
-    password: Optional[T_Password] = None
+    password: Optional[PasswordType] = None
     role: Optional[UserRole] = None
     department: Optional[str] = None
     is_active: Optional[bool] = None
