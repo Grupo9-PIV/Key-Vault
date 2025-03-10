@@ -34,15 +34,26 @@ const MyAccount = () => {
   };
 
   // Função para atualizar a foto de perfil
+  const validateProfileImage = (url) => {
+    const dataUrlPattern = /^data:image\/(png|jpg|jpeg|gif);base64,/;
+    const trustedUrlPattern = /^https:\/\/trusted\.domain\//;
+    return dataUrlPattern.test(url) || trustedUrlPattern.test(url);
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUser((prevUser) => ({
-          ...prevUser,
-          profileImage: reader.result,
-        }));
+        const result = reader.result;
+        if (validateProfileImage(result)) {
+          setUser((prevUser) => ({
+            ...prevUser,
+            profileImage: result,
+          }));
+        } else {
+          console.error('Invalid image URL');
+        }
       };
       reader.readAsDataURL(file);
     }
