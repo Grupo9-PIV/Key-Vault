@@ -159,9 +159,9 @@ class LicenseService:
                     license_key,
                 ):
                     raise ValueError(
-                    f'A chave de licença do {software_name.capitalize()} '
-                    f'requer {expected_length} caracteres alfanuméricos.'
-                )
+                        f'A chave de licença do {software_name.capitalize()} '
+                        f'requer {expected_length} caracteres alfanuméricos.'
+                    )
 
         # Lista de campos obrigatórios
         required_fields = [
