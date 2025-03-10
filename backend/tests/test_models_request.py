@@ -14,7 +14,6 @@ def test_create_request(
         manager_id=user.id,
         reason=None,
         feedback=None,
-        status=DEFAULT_STATUS,
     )
 
     session.add(request)
@@ -85,7 +84,6 @@ def test_default_status_pendente(session: Session) -> None:
         manager_id=None,
         reason=None,
         feedback=None,
-        status=None,
     )
     session.add(renewal_request)
     session.commit()
