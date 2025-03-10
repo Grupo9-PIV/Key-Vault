@@ -8,6 +8,10 @@ import Notifications from './pages/Notifications';
 import Renewals from './pages/Renewals';
 import RenewalsDetail from './pages/RenewalDetail';
 import Initial from './pages/Initial';
+import Login from './pages/Login';
+import ChangePassword from './pages/ChangePassword';
+import MyAccount from './pages/MyAccount';
+import CreateUser from './pages/CreateUser';
 
 const AppRoutes = () => {
   return (
@@ -22,6 +26,10 @@ const AppRoutes = () => {
         <Route path="/renewals" element={<Renewals />} />
         <Route path="/renewals/:id" element={<RenewalsDetail />} />
         <Route path="/initial" element={<Initial />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/changepassword" element={<ChangePassword />} />
+        <Route path="/myaccount" element={<MyAccount />} />
+        <Route path="/Createuser" element={<CreateUser />} />
       </Routes>
     </Router>
   );
