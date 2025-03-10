@@ -26,8 +26,8 @@ def test_create_license(
         headers={'Authorization': f'Bearer {token}'},
     )
     data = response.json()
-    
-    print("Resposta recebida:", response.json()) 
+
+    print('Resposta recebida:', response.json())
 
     assert response.status_code == HTTPStatus.CREATED
 
@@ -108,19 +108,19 @@ def test_partial_update_license(
     """
     Testa a atualização parcial de uma licença.
     """
-    partial_update_data = {"software_name": "NovoSoftware"}
-    
+    partial_update_data = {'software_name': 'NovoSoftware'}
+
     response = client.patch(
         f'/licenses/{mock_license.id}',
         json=partial_update_data,
         headers={'Authorization': f'Bearer {token}'},
     )
     data = response.json()
-    
+
     db_license = session.scalar(
         select(License).where(License.id == data.get('id'))
     )
-    
+
     assert response.status_code == HTTPStatus.OK
     assert data['software_name'] == partial_update_data['software_name']
     assert db_license.software_name == partial_update_data['software_name']
