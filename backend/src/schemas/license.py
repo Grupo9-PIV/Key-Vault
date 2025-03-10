@@ -30,7 +30,6 @@ class LicenseBase(BaseModel):
 
 class LicenseCreate(LicenseBase):
     software_name: str
-    license_key: str
 
 
 class LicenseUpdate(LicenseBase):

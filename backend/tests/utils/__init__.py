@@ -37,7 +37,6 @@ def get_license_data() -> dict[str, Any]:
         'start_date': fake.date_time().isoformat(),
         'end_date': fake.date_time().isoformat(),
         'priority': choice(list(LicensePriority)).value,
-        'license_key': fake.pystr(min_chars=10, max_chars=25),
     }
 
 
