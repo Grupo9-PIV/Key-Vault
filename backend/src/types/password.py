@@ -60,7 +60,7 @@ def validate_password(v: SecretStr) -> SecretStr:
     return v
 
 
-T_Password = Annotated[
+PasswordType = Annotated[
     SecretStr,
     Field(
         ...,

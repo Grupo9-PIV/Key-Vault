@@ -6,7 +6,7 @@ from src.schemas import UserList, UserPublic, UserSchema, UserUpdate
 from src.services import UserService
 from src.types import T_CurrentUser, T_Session
 
-router = APIRouter(prefix='/users', tags=['users'])
+router = APIRouter(prefix='/users', tags=['Users'])
 
 
 @router.post('/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
