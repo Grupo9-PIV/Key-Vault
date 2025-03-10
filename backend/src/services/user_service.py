@@ -21,7 +21,7 @@ class UserService:
 
         new_user = User(
             email=user.email,
-            password_hash=get_password_hash(user.password),
+            password_hash=get_password_hash(user.password.get_secret_value()),
             name=user.name,
             role=user.role,
             department=user.department,
@@ -65,7 +65,9 @@ class UserService:
 
         for field, value in update_data.items():
             if field == 'password':
-                user.password_hash = get_password_hash(value)
+                user.password_hash = get_password_hash(
+                    value.get_secret_value()
+                )
             else:
                 setattr(user, field, value)
 

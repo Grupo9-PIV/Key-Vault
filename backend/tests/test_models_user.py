@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import pytest
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -80,9 +82,9 @@ def test_missing_required_fields(session: Session) -> None:
 
 
 def test_delete_user_with_license(
-    session: Session, user: User, mock_license: License
+    session: Session, user: User, create_license: Callable[..., License]
 ) -> None:
-    assert mock_license.assigned_to == user
+    mock_license = create_license(assigned_to=user)
 
     session.delete(user)
     session.commit()
@@ -92,7 +94,11 @@ def test_delete_user_with_license(
     assert mock_license.assigned_to_id is None
 
 
-def test_user_license_relationship(user: User, mock_license: License) -> None:
+def test_user_license_relationship(
+    user: User, create_license: Callable[..., License]
+) -> None:
+    mock_license = create_license(assigned_to=user)
+
     assert mock_license in user.licenses
     assert mock_license.assigned_to == user
 

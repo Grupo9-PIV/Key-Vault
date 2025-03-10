@@ -79,7 +79,8 @@ table {
 
 /* Geral */
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -90,8 +91,18 @@ html, body {
   min-height: 100vh;
 }
 
+Footer {
+  margin-top: auto;
+}
+
 /* Initial */
 
 .dashboard-item {
   width: 10rem;
+}
+
+/* Login */
+
+.form-w {
+  width: 280px;
 }

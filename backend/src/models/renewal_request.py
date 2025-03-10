@@ -42,7 +42,7 @@ class RenewalRequest:
     reason: Mapped[str] = mapped_column(Text, nullable=True)
     feedback: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[RequestStatus] = mapped_column(
-        Enum(RequestStatus), default=DEFAULT_STATUS
+        Enum(RequestStatus), init=False, default=DEFAULT_STATUS
     )
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()

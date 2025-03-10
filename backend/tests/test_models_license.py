@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from datetime import datetime
 
 import pytest
@@ -65,8 +66,12 @@ def test_update_license(session: Session, mock_license: License) -> None:
     assert updated_license.updated_at is not None
 
 
-def test_license_user_relationship(user: User, mock_license: License) -> None:
-    assert mock_license.assigned_to == user
+def test_license_user_relationship(
+    user: User, create_license: Callable[..., License]
+) -> None:
+    mock_license = create_license(assigned_to=user)
+
+    assert mock_license.assigned_to_id == user.id
     assert mock_license in user.licenses
 
 

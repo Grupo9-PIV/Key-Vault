@@ -1,8 +1,6 @@
-from collections.abc import Generator
-from datetime import datetime
+from collections.abc import Callable, Generator
 
 import pytest
-from factory import Factory, LazyAttribute, Sequence
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session
@@ -10,22 +8,9 @@ from testcontainers.postgres import PostgresContainer
 
 from src.app import app
 from src.database import get_session, table_registry
-from src.enums import UserRole
 from src.models import AuditLog, License, Notification, RenewalRequest, User
-from src.security import get_password_hash
-
-
-class UserFactory(Factory):
-    class Meta:
-        model = User
-
-    name: str = Sequence(lambda x: f'test-{x}')
-    email: str = LazyAttribute(lambda obj: f'{obj.name}@test.com')
-    password_hash: str = LazyAttribute(
-        lambda obj: get_password_hash(obj.name + '-senha')
-    )
-    role: UserRole = UserRole.USER
-    department: str = 'Teste'
+from tests.factory import LicenseFactory, UserFactory
+from tests.factory.user_factory import UserRole
 
 
 @pytest.fixture(scope='session')
@@ -61,59 +46,52 @@ def client(session: Session) -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture
-def user(session: Session) -> User:
-    plain_password = '12345678'
+def create_user(session: Session) -> Callable[..., User]:
+    def _create_user(**kwargs) -> User:
+        user = UserFactory(**kwargs)
 
-    user = UserFactory(password_hash=get_password_hash(plain_password))
+        session.add(user)
+        session.commit()
+        session.refresh(user)
 
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+        return user
 
-    user.password = plain_password
-
-    return user
-
-
-@pytest.fixture
-def admin(session: Session) -> User:
-    plain_password = '12345678'
-
-    admin_user = UserFactory(
-        password_hash=get_password_hash(plain_password), role=UserRole.ADMIN
-    )
-
-    session.add(admin_user)
-    session.commit()
-    session.refresh(admin_user)
-
-    admin_user.password = plain_password
-
-    return admin_user
+    return _create_user
 
 
 @pytest.fixture
-def mock_license(session: Session, user: User) -> License:
-    mock_license = License(
-        assigned_to_id=user.id,
-        manager_id=user.id,
-        software_name='XYZ Soft',
-        license_type='trial',
-        status='ativa',
-        developed_by='Test Soft',
-        version='v1.0.0',
-        purchase_date=datetime(1900, 1, 1),
-        start_date=datetime(1900, 1, 1),
-        end_date=datetime(1900, 1, 1),
-        license_key=None,
-        current_usage=None,
-        subscription_plan=None,
-        conditions=None,
-    )
-    session.add(mock_license)
-    session.commit()
+def user(create_user) -> User:
+    return create_user(role=UserRole.USER)
 
-    return mock_license
+
+@pytest.fixture
+def admin(create_user) -> User:
+    return create_user(admin=True)  # Usa o trait 'admin'
+
+
+@pytest.fixture
+def create_license(session: Session) -> Callable[..., License]:
+    def _create_license(**kwargs) -> License:
+        mock_license = LicenseFactory(**kwargs)
+
+        session.add(mock_license)
+        session.commit()
+        session.refresh(mock_license)
+
+        return mock_license
+
+    return _create_license
+
+
+@pytest.fixture
+def mock_license(create_license) -> License:
+    return create_license(
+        with_version=True,
+        with_license_key=True,
+        with_current_usage=True,
+        with_subscription_plan=True,
+        with_conditions=True,
+    )
 
 
 @pytest.fixture
@@ -140,7 +118,6 @@ def renewal_request(
         manager_id=None,
         reason=None,
         feedback=None,
-        status='pendente',
     )
 
     session.add(renewal_request)
@@ -175,7 +152,7 @@ def token(client, user) -> str:
 
 
 @pytest.fixture
-def adm_token(client, admin) -> str:
+def admin_token(client, admin) -> str:
     response = client.post(
         '/auth/token',
         data={'username': admin.email, 'password': admin.password},

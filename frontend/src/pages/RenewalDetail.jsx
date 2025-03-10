@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 
-
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const RenewalDetail = () => {
-
   useEffect(() => {
-      document.title = "Detalhes das Renovações"; 
-    }, []);
+    document.title = 'Detalhes das Renovações';
+  }, []);
 
   const { id } = useParams();
   const [renewal, setRenewal] = useState(null);
@@ -24,7 +21,7 @@ const RenewalDetail = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar detalhes da renovação:", error);
+        console.error('Erro ao buscar detalhes da renovação:', error);
         setLoading(false);
       });
   }, [id]);
@@ -36,11 +33,22 @@ const RenewalDetail = () => {
     <div>
       <Header />
       <h2>Detalhes da Solicitação de Renovação</h2>
-      <p><strong>ID:</strong> {renewal.id}</p>
-      <p><strong>Licença:</strong> {renewal.license_name}</p>
-      <p><strong>Status:</strong> {renewal.status}</p>
-      <p><strong>Data da Solicitação:</strong> {new Date(renewal.created_at).toLocaleString()}</p>
-      <p><strong>Motivo:</strong> {renewal.reason}</p>
+      <p>
+        <strong>ID:</strong> {renewal.id}
+      </p>
+      <p>
+        <strong>Licença:</strong> {renewal.license_name}
+      </p>
+      <p>
+        <strong>Status:</strong> {renewal.status}
+      </p>
+      <p>
+        <strong>Data da Solicitação:</strong>{' '}
+        {new Date(renewal.created_at).toLocaleString()}
+      </p>
+      <p>
+        <strong>Motivo:</strong> {renewal.reason}
+      </p>
 
       <Link to="/renewals">← Voltar para a lista de renovações</Link>
       <Footer />

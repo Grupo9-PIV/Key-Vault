@@ -25,12 +25,6 @@ Este projeto tem como objetivo desenvolver um sistema de gerenciamento de licen�
 </p>
 </div>
 
-## 🎨 Layout
-
-O layout da aplicação está disponível no Figma:
-
-[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/M0nKLCKLdElRlMthmnS0bM/PROJETO-INTEGRADOR-V?t=qFffvOjE9HZJZCY9-1)
-
 ## 📚 Funcionalidades Principais
 
 - ✅ Cadastro e listagem de licenças de software
@@ -81,6 +75,12 @@ O layout da aplicação está disponível no Figma:
 - **Nginx** - Proxy reverso
 - **GitHub Actions** - CI/CD para automação de deploy
 
+## 🎨 Layout
+
+O layout da aplicação está disponível no Figma:
+
+[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/M0nKLCKLdElRlMthmnS0bM/PROJETO-INTEGRADOR-V?t=qFffvOjE9HZJZCY9-1)
+
 ## 🎲 Banco de Dados
 
 O SGBD escolhido foi o PostgreSQL, ideal para aplicações que requerem alta conformidade com padrões SQL, extensibilidade, suporte a dados complexos e alta confiabilidade.
@@ -105,28 +105,30 @@ Abaixo se encontra um diagrama que descreve todas as entidades e relacionamentos
   git clone git@github.com:Grupo9-PIV/Key-Vault.git
   ```
 
-- Crie um arquivo .env na raíz com as seguintes variáveis de ambiente (substitua valores conforme necessário):
+- Crie um arquivo .env dentro da pasta `deploy` com as seguintes variáveis de ambiente (substitua valores conforme necessário):
 
   ```env
-    # 🔒 Backend
+    # ✨ Frontend
+    VITE_API_BASE_URL=/api                                              # Endpoint base para requisições HTTP à API
 
+    # 🔒 Backend
     DATABASE_URL=postgresql+psycopg://admin:admin@db:5432/KEY_VAULT     # URL do PostgreSQL
-    SECRET_KEY="sua-chave-secreta"                                      # Chave para tokens JWT
-    ALGORITHM="HS256"                                                   # Algoritmo de criptografia
+    SECRET_KEY=sua-chave-secreta                                        # Chave para tokens JWT
+    ALGORITHM=HS256                                                     # Algoritmo de criptografia
     ACCESS_TOKEN_EXPIRE_MINUTES=30                                      # Tempo de expiração do token (minutos)
-    ENVIRONMENT="production"                                            # Ambiente (production/development)
+    ENVIRONMENT=production                                              # Ambiente (production/development)
+    CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80           # Permite a comunicação entre os serviços
 
     # 🐘 PostgreSQL
-
     POSTGRES_USER=admin                                                 # Usuário do banco de dados
     POSTGRES_PASSWORD=admin                                             # Senha do banco de dados
+    PGUSER=admin                                                        # Igual ao POSTGRES_USER
     POSTGRES_HOST=db                                                    # Host do PostgreSQL
     POSTGRES_PORT=5432                                                  # Porta do PostgreSQL
     POSTGRES_DB=KEY_VAULT                                               # Nome do banco de dados
     TZ=America/Sao_Paulo                                                # Fuso horário
 
     # 🛠️ pgAdmin
-
     PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com                             # Email de acesso ao pgAdmin
     PGADMIN_DEFAULT_PASSWORD=admin                                      # Senha do pgAdmin
   ```

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import '../styles/style.css'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import '../styles/style.css';
 
 interface User {
   id: number;
@@ -12,23 +12,22 @@ interface User {
 }
 
 const UserList = () => {
-
   useEffect(() => {
-      document.title = "Lista de Usuários"; 
-    }, []);
+    document.title = 'Lista de Usuários';
+  }, []);
 
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/users")
+    fetch('http://localhost:8000/users')
       .then((response) => response.json())
       .then((data) => {
         setUsers(data.users);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar usuários:", error);
+        console.error('Erro ao buscar usuários:', error);
         setLoading(false);
       });
   }, []);
@@ -41,13 +40,18 @@ const UserList = () => {
       <div className="container">
         <header className="d-flex justify-content-between py-3 align-items-center">
           <div>
-            <a href="#" className="nav-link" aria-current="page">
+            <a href="/CreateUser" className="nav-link" aria-current="page">
               <button className="btn btn-dark me-2">Criar usuário</button>
-            </a> 
+            </a>
           </div>
           <div>
             <form className="w-100 me-3" role="search">
-              <input type="search" className="form-control ms-2" placeholder="Search..." aria-label="Search"/>
+              <input
+                type="search"
+                className="form-control ms-2"
+                placeholder="Search..."
+                aria-label="Search"
+              />
             </form>
           </div>
         </header>
@@ -77,8 +81,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,8 +102,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -103,8 +123,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -116,8 +144,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -129,8 +165,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -142,8 +186,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -155,8 +207,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,8 +228,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -181,8 +249,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -194,8 +270,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -207,8 +291,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -220,8 +312,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -233,8 +333,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -246,8 +354,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -259,8 +375,16 @@ const UserList = () => {
                 <td>Não</td>
                 <td>25/02/2025</td>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
               <tr data-bs-toggle="dropdown" aria-expanded="false">
@@ -271,16 +395,24 @@ const UserList = () => {
                 <td>TI</td>
                 <td>Não</td>
                 <td>25/02/2025</td>
-                  <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">Editar</a></li>
-                  <li><a className="dropdown-item" href="#">Excluir</a></li>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
                 </ul>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-        {/*
+      {/*
           <h2>Lista de Usuários</h2>*
           <table>
             <thead>
