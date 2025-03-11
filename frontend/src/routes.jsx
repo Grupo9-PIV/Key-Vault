@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import ChangePassword from './pages/ChangePassword';
 import MyAccount from './pages/MyAccount';
 import CreateUser from './pages/CreateUser';
+import EditUser from './pages/EditUser';
 
 const AppRoutes = () => {
   return (
@@ -29,7 +30,8 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/changepassword" element={<ChangePassword />} />
         <Route path="/myaccount" element={<MyAccount />} />
-        <Route path="/Createuser" element={<CreateUser />} />
+        <Route path="/createuser" element={<CreateUser />} />
+        <Route path="/edituser" element={<EditUser />} />
       </Routes>
     </Router>
   );
