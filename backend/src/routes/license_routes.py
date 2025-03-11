@@ -7,7 +7,12 @@ from sqlalchemy.orm import Session
 from src.database import get_session
 from src.exceptions import LicenseNotFoundException
 from src.models import User
-from src.schemas.license import LicenseCreate, LicenseResponse, LicenseUpdate
+from src.schemas.license import (
+    LicenseCreate,
+    LicensePartialUpdate,
+    LicenseResponse,
+    LicenseUpdate,
+)
 from src.security import get_current_user
 from src.services.license_service import LicenseService
 
@@ -102,7 +107,7 @@ def update_license_route(
     current_user: User = Depends(get_current_user),
 ):
     """
-    Atualiza uma licença existente.
+    Atualiza todos os campos de uma licença.
     Requer autenticação.
     """
     try:
@@ -126,6 +131,42 @@ def update_license_route(
         )
     except Exception as e:
         # Outros erros inesperados
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail=f'Erro interno no servidor: {str(e)}',
+        )
+
+
+@router.patch(
+    '/{license_id}', status_code=HTTPStatus.OK, response_model=LicenseResponse
+)
+def partial_update_license_route(
+    license_id: int,
+    update_data: LicensePartialUpdate,
+    db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Atualiza parcialmente uma licença.
+    Apenas os campos fornecidos são atualizados.
+    Requer autenticação.
+    """
+    try:
+        updated_license = LicenseService.partial_update_license(
+            db, license_id, update_data.dict(exclude_unset=True)
+        )
+        if not updated_license:
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_FOUND,
+                detail='Licença não encontrada.',
+            )
+        return updated_license
+    except LicenseNotFoundException as e:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail=str(e),
+        )
+    except Exception as e:
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f'Erro interno no servidor: {str(e)}',

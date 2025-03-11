@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -6,7 +7,6 @@ from jwt import decode, encode
 from jwt.exceptions import ExpiredSignatureError, PyJWTError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
-from zoneinfo import ZoneInfo
 
 from src.database import get_session
 from src.exceptions import (
