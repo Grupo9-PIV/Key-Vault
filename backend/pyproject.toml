@@ -1,32 +1,36 @@
-[tool.poetry]
+[project]
 name = "key_vault_api"
 version = "0.1.0"
 description = "Backend do Projeto Integrador V"
 authors = [
-    "João Vitor Alves <jvitor.alol+contato@gmail.com>",
-    "Guilherme Pires Maruiti <maruiti1@gmail.com>",
-    "Abel Elias de Macedo <macedoabel.elias@gmail.com>",
-    "Ewellyn Rocio Paes de Almeida <lynnpaes03@gmail.com>",
-    "Jessica Fernandes da Silva <jessica.fernandes.adv@outlook.com>",
-    "William Matheus Gonçalves Belhome <william.belhome@gmail.com>"
+    { name = "João Vitor Alves", email = "jvitor.alol+contato@gmail.com" },
+    { name = "Guilherme Pires Maruiti", email = "maruiti1@gmail.com" },
+    { name = "Abel Elias de Macedo", email = "macedoabel.elias@gmail.com" },
+    { name = "Ewellyn Rocio Paes de Almeida", email = "lynnpaes03@gmail.com" },
+    { name = "Jessica Fernandes da Silva", email = "jessica.fernandes.adv@outlook.com" },
+    { name = "William Matheus Gonçalves Belhome", email = "william.belhome@gmail.com" }
 ]
 license = "MIT"
 readme = "README.md"
+requires-python = "~=3.13"
+dependencies = [
+    "fastapi[standard] ~=0.115.5",
+    "sqlalchemy ~=2.0.37",
+    "pydantic-settings ~=2.7.1",
+    "alembic ~=1.14.1",
+    "pwdlib[argon2] ~=0.2.1",
+    "python-multipart ~=0.0.20",
+    "pyjwt ~=2.10.1",
+    "psycopg[binary] ~=3.2.5",
+    "dotenv ~=0.9.9"
+]
+
+[project.urls]
 repository = "https://github.com/Grupo9-PIV/Key-Vault/"
 homepage = "https://github.com/Grupo9-PIV"
-package-mode = false
 
-[tool.poetry.dependencies]
-python = "^3.13"
-fastapi = {extras = ["standard"], version = "^0.115.5"}
-sqlalchemy = "^2.0.37"
-pydantic-settings = "^2.7.1"
-alembic = "^1.14.1"
-pwdlib = {extras = ["argon2"], version = "^0.2.1"}
-python-multipart = "^0.0.20"
-pyjwt = "^2.10.1"
-psycopg = {extras = ["binary"], version = "^3.2.5"}
-dotenv = "^0.9.9"
+[tool.poetry]
+package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
@@ -39,27 +43,27 @@ testcontainers = "^4.9.1"
 
 [tool.pytest.ini_options]
 pythonpath = "."
-addopts = '-p no:warnings'
+addopts = "-p no:warnings"
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ['migrations']
+extend-exclude = ["migrations"]
 
 [tool.ruff.lint]
 preview = true
-select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+select = ["I", "F", "E", "W", "PL", "PT"]
 
 [tool.ruff.format]
 preview = true
-quote-style = 'single'
+quote-style = "single"
 
 [tool.taskipy.tasks]
-run = 'fastapi dev src/app.py --port=8080'
-lint = 'ruff check . && ruff check . --diff'
-format = 'ruff check . --fix && ruff format .'
-pre_test = 'task lint'
-test = 'pytest -s -x --cov=src -vv'
-post_test = 'coverage html'
+run = "fastapi dev src/app.py --port=8080"
+lint = "ruff check . && ruff check . --diff"
+format = "ruff check . --fix && ruff format ."
+pre_test = "task lint"
+test = "pytest -s -x --cov=src -vv"
+post_test = "coverage html"
 
 [build-system]
 requires = ["poetry-core"]
