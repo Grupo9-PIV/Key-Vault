@@ -16,6 +16,10 @@ import EditUser from './pages/EditUser';
 import EditLicense from './pages/EditLicense';
 import AddLicense from './pages/AddLicense';
 import AddUser from './pages/AddUser.jsx';
+import Requests from './pages/Requests.jsx';
+import RequestsOptions from './pages/RequestsOptions.jsx';
+import Purchase from './pages/Purchase.jsx';
+import Approval from './pages/Approval.jsx';
 
 const AppRoutes = () => {
   return (
@@ -38,6 +42,10 @@ const AppRoutes = () => {
         <Route path="/editlicense" element={<EditLicense />} />
         <Route path="/addlicense" element={<AddLicense />} />
         <Route path="/adduser" element={<AddUser />} />
+        <Route path="/requests" element={<Requests />} />
+        <Route path="/requestsoptions" element={<RequestsOptions />} />
+        <Route path="/purchase" element={<Purchase />} />
+        <Route path="/approval" element={<Approval />} />
       </Routes>
     </Router>
   );
