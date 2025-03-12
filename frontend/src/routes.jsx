@@ -15,6 +15,7 @@ import CreateUser from './pages/CreateUser';
 import EditUser from './pages/EditUser';
 import EditLicense from './pages/EditLicense';
 import AddLicense from './pages/AddLicense';
+import AddUser from './pages/AddUser.jsx';
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
         <Route path="/edituser" element={<EditUser />} />
         <Route path="/editlicense" element={<EditLicense />} />
         <Route path="/addlicense" element={<AddLicense />} />
+        <Route path="/adduser" element={<AddUser />} />
       </Routes>
     </Router>
   );
