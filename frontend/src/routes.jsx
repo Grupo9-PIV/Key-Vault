@@ -21,7 +21,7 @@ import RequestsOptions from './pages/RequestsOptions.jsx';
 import Purchase from './pages/Purchase.jsx';
 import Approval from './pages/Approval.jsx';
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Router>
       <Routes>
@@ -49,6 +49,6 @@ const AppRoutes = () => {
       </Routes>
     </Router>
   );
-};
+}
 
 export default AppRoutes;
