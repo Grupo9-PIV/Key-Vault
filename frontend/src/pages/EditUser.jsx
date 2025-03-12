@@ -10,44 +10,26 @@ const EditUser = () => {
       <div className="container">
         <h2 className="pb-2 border-bottom">Editar Usuário</h2>
         <div className="py-5">
-          {/* Seção não editável */}
-          <div className="mb-5 row">
-            {/* Coluna da foto (em telas grandes, ocupa 4 colunas; em telas pequenas, ocupa 12 colunas) */}
-            <div className="col-md-4 text-center mb-3 mb-md-0">
-              <img 
-                src="https://github.com/mdo.png" 
-                alt="User" 
-                className="rounded-circle"
-                width="200"
-                height="200"
-              />
-            </div>
-            {/* Coluna do nome e e-mail (em telas grandes, ocupa 8 colunas; em telas pequenas, ocupa 12 colunas) */}
-            <div className="col-md-8">
-              <div className="mb-3">
-                <label htmlFor="name" className="form-label">Nome</label>
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  id="name" 
-                  defaultValue="Ewellyn Almeida" 
-                  disabled 
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">E-mail</label>
-                <input 
-                  type="email" 
-                  className="form-control" 
-                  id="email" 
-                  defaultValue="lynn@gmail.com" 
-                  disabled 
-                />
-              </div>
-            </div>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">Nome</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              id="name" 
+              defaultValue="Ewellyn Almeida" 
+              disabled 
+            />
           </div>
-
-          {/* Seção editável */}
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">E-mail</label>
+            <input 
+              type="email" 
+              className="form-control" 
+              id="email" 
+              defaultValue="lynn@gmail.com" 
+              disabled 
+            />
+            </div>
           <form>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Nova Senha</label>

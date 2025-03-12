@@ -67,7 +67,7 @@ const LicenseList = () => {
       <div className="container">
         <header className="d-flex justify-content-between py-3 align-items-center">
           <div>
-            <a href="/CreateUser" className="nav-link" aria-current="page">
+            <a href="/AddLicense" className="nav-link" aria-current="page">
               <button className="btn btn-dark me-2">Adicionar licença</button>
             </a>
           </div>

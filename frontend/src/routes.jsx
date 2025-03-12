@@ -13,6 +13,8 @@ import ChangePassword from './pages/ChangePassword';
 import MyAccount from './pages/MyAccount';
 import CreateUser from './pages/CreateUser';
 import EditUser from './pages/EditUser';
+import EditLicense from './pages/EditLicense';
+import AddLicense from './pages/AddLicense';
 
 const AppRoutes = () => {
   return (
@@ -32,6 +34,8 @@ const AppRoutes = () => {
         <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/createuser" element={<CreateUser />} />
         <Route path="/edituser" element={<EditUser />} />
+        <Route path="/editlicense" element={<EditLicense />} />
+        <Route path="/addlicense" element={<AddLicense />} />
       </Routes>
     </Router>
   );

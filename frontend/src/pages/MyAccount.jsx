@@ -11,6 +11,7 @@ const MyAccount = () => {
     name: 'User Teste',
     email: 'user.teste@empresa.com',
     department: 'TI',
+    password: '', // Adicionando campo de senha
     profileImage: 'https://github.com/mdo.png', // URL da imagem de perfil
   });
 
@@ -33,32 +34,6 @@ const MyAccount = () => {
     }));
   };
 
-  // Função para atualizar a foto de perfil
-  const validateProfileImage = (url) => {
-    const dataUrlPattern = /^data:image\/(png|jpg|jpeg|gif);base64,/;
-    const trustedUrlPattern = /^https:\/\/trusted\.domain\//;
-    return dataUrlPattern.test(url) || trustedUrlPattern.test(url);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        if (validateProfileImage(result)) {
-          setUser((prevUser) => ({
-            ...prevUser,
-            profileImage: result,
-          }));
-        } else {
-          console.error('Invalid image URL');
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <div className="page-container">
       <Header />
@@ -70,26 +45,6 @@ const MyAccount = () => {
                 <h3 className="card-title">Minha Conta</h3>
               </div>
               <div className="card-body">
-                <div className="text-center mb-4">
-                  <img
-                    src={user.profileImage}
-                    alt="Foto de Perfil"
-                    className="rounded-circle"
-                    width="150"
-                    height="150"
-                  />
-                  {isEditing && (
-                    <div className="mt-3">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="form-control"
-                      />
-                    </div>
-                  )}
-                </div>
-
                 <form>
                   <div className="mb-3">
                     <label htmlFor="name" className="form-label">
@@ -102,7 +57,7 @@ const MyAccount = () => {
                       name="name"
                       value={user.name}
                       onChange={handleChange}
-                      disabled={!isEditing}
+                      disabled={!isEditing} // Editável apenas quando isEditing for true
                     />
                   </div>
 
@@ -117,7 +72,7 @@ const MyAccount = () => {
                       name="email"
                       value={user.email}
                       onChange={handleChange}
-                      disabled={!isEditing}
+                      disabled // Sempre desabilitado
                     />
                   </div>
 
@@ -132,7 +87,22 @@ const MyAccount = () => {
                       name="department"
                       value={user.department}
                       onChange={handleChange}
-                      disabled={!isEditing}
+                      disabled // Sempre desabilitado
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">
+                      Senha
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                      name="password"
+                      value={user.password}
+                      onChange={handleChange}
+                      disabled={!isEditing} // Editável apenas quando isEditing for true
                     />
                   </div>
 
@@ -172,7 +142,6 @@ const MyAccount = () => {
       </div>
       <Footer />
     </div>
-
   );
 };
 
