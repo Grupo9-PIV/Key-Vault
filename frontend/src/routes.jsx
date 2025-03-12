@@ -14,7 +14,7 @@ import MyAccount from './pages/MyAccount';
 import CreateUser from './pages/CreateUser';
 import EditUser from './pages/EditUser';
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Router>
       <Routes>
@@ -35,6 +35,6 @@ const AppRoutes = () => {
       </Routes>
     </Router>
   );
-};
+}
 
 export default AppRoutes;
