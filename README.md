@@ -79,7 +79,7 @@ Este projeto tem como objetivo desenvolver um sistema de gerenciamento de licen�
 
 O layout da aplicação está disponível no Figma:
 
-[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/M0nKLCKLdElRlMthmnS0bM/PROJETO-INTEGRADOR-V?t=qFffvOjE9HZJZCY9-1)
+[![Made by Cubos Academy](https://img.shields.io/badge/Acessar%20Layout%20-Figma-%2304D361)](https://www.figma.com/design/fwAlL7iUPWz6uDpnR9u4Uf/Landing-page?node-id=0-1&p=f&t=CbhFgP7LbpWncCTW-0)
 
 ## 🎲 Banco de Dados
 
