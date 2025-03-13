@@ -1,306 +1,250 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../api/index';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/style.css';
 
 const EditLicense = () => {
+  const { licenseId } = useParams(); // Captura o licenseId da URL
+  const navigate = useNavigate();
   const [license, setLicense] = useState({
-    softwareName: 'Software XYZ',
-    manager: 'Gerente ABC',
-    licenseType: 'assinatura',
-    version: '1.0.0',
-    acquisitionDate: '2023-01-01',
-    endDate: '2024-01-01',
-    status: 'ativa',
-    key: 'ABC123-XYZ456',
-    userLimit: 100,
-    activeUsers: 50,
-    plan: 'Plano Premium',
-    priority: 'alta',
+    software_name: '',
+    license_type: '',
+    status: '',
+    developed_by: '',
+    version: '',
+    purchase_date: '',
+    start_date: '',
+    end_date: '',
+    license_key: '',
+    current_usage: 0,
+    subscription_plan: '',
+    conditions: '',
+    priority: '',
+    assigned_to_id: 0,
+    manager_id: 0,
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Usuário 1', email: 'usuario1@empresa.com', department: 'TI' },
-    { id: 2, name: 'Usuário 2', email: 'usuario2@empresa.com', department: 'RH' },
-    { id: 3, name: 'Usuário 3', email: 'usuario3@empresa.com', department: 'Vendas' },
-  ]);
+  useEffect(() => {
+    if (!licenseId) {
+      console.error('ID da licença não encontrado na URL.');
+      setError('ID da licença não encontrado.');
+      setLoading(false);
+      return;
+    }
+
+    const fetchLicense = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await api.get(`/licenses/${licenseId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setLicense(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erro ao buscar licença:', error);
+        if (error.response?.status === 401) {
+          alert('Sessão expirada, faça login novamente.');
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+        setError('Erro ao carregar os dados da licença.');
+        setLoading(false);
+      }
+    };
+
+    fetchLicense();
+  }, [licenseId, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const updatedLicense = { ...license };
+
+      await api.patch(`/licenses/${licenseId}`, updatedLicense, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert('Licença atualizada com sucesso!');
+      navigate('/licenses');
+    } catch (error) {
+      console.error('Erro ao atualizar licença:', error);
+      if (error.response?.status === 401) {
+        alert('Sessão expirada, faça login novamente.');
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+      setError('Erro ao atualizar licença.');
+    }
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
     setLicense((prevLicense) => ({
       ...prevLicense,
-      [name]: value,
+      [id]: value,
     }));
   };
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    console.log('Licença salva:', license);
-  };
-
-  // Função para adicionar um novo usuário (simulação)
-  const handleAddUser = () => {
-    const newUser = {
-      id: users.length + 1, // Simula um novo ID
-      name: `Usuário ${users.length + 1}`,
-      email: `usuario${users.length + 1}@empresa.com`,
-      department: 'Novo Departamento', // Valor padrão para o departamento
-    };
-    setUsers([...users, newUser]);
-  };
+  if (loading) return <p>Carregando...</p>;
 
   return (
     <div className="page-container">
       <Header />
       <div className="container">
         <h2 className="pb-2 border-bottom">Editar Licença</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
         <div className="py-5">
-          <form onSubmit={handleSave}>
-            {/* Nome do Software */}
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="softwareName" className="form-label">
-                Nome do Software
-              </label>
+              <label htmlFor="software_name" className="form-label">Nome do Software</label>
               <input
                 type="text"
                 className="form-control"
-                id="softwareName"
-                name="softwareName"
-                value={license.softwareName}
+                id="software_name"
+                value={license.software_name}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Gerente */}
             <div className="mb-3">
-              <label htmlFor="manager" className="form-label">
-                Gerente
-              </label>
+              <label htmlFor="license_type" className="form-label">Tipo de Licença</label>
               <input
                 type="text"
                 className="form-control"
-                id="manager"
-                name="manager"
-                value={license.manager}
+                id="license_type"
+                value={license.license_type}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Tipo de Licença */}
             <div className="mb-3">
-              <label htmlFor="licenseType" className="form-label">
-                Tipo de Licença
-              </label>
-              <select
-                className="form-select"
-                id="licenseType"
-                name="licenseType"
-                value={license.licenseType}
+              <label htmlFor="status" className="form-label">Status</label>
+              <input
+                type="text"
+                className="form-control"
+                id="status"
+                value={license.status}
                 onChange={handleChange}
-              >
-                <option value="assinatura">Assinatura</option>
-                <option value="perpétua">Perpétua</option>
-                <option value="trial">Trial</option>
-                <option value="educacional">Educacional</option>
-                <option value="corporativa">Corporativa</option>
-                <option value="open source">Open Source</option>
-                <option value="freemium">Freemium</option>
-                <option value="pay per use">Pay per Use</option>
-              </select>
+              />
             </div>
-
-            {/* Versão */}
             <div className="mb-3">
-              <label htmlFor="version" className="form-label">
-                Versão
-              </label>
+              <label htmlFor="developed_by" className="form-label">Desenvolvido por</label>
+              <input
+                type="text"
+                className="form-control"
+                id="developed_by"
+                value={license.developed_by}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="version" className="form-label">Versão</label>
               <input
                 type="text"
                 className="form-control"
                 id="version"
-                name="version"
                 value={license.version}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Data de Aquisição */}
             <div className="mb-3">
-              <label htmlFor="acquisitionDate" className="form-label">
-                Data de Aquisição
-              </label>
+              <label htmlFor="purchase_date" className="form-label">Data de Compra</label>
               <input
                 type="date"
                 className="form-control"
-                id="acquisitionDate"
-                name="acquisitionDate"
-                value={license.acquisitionDate}
+                id="purchase_date"
+                value={license.purchase_date}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Data de Término */}
             <div className="mb-3">
-              <label htmlFor="endDate" className="form-label">
-                Data de Término
-              </label>
+              <label htmlFor="start_date" className="form-label">Data de Início</label>
               <input
                 type="date"
                 className="form-control"
-                id="endDate"
-                name="endDate"
-                value={license.endDate}
+                id="start_date"
+                value={license.start_date}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Status */}
             <div className="mb-3">
-              <label htmlFor="status" className="form-label">
-                Status
-              </label>
-              <select
-                className="form-select"
-                id="status"
-                name="status"
-                value={license.status}
+              <label htmlFor="end_date" className="form-label">Data de Término</label>
+              <input
+                type="date"
+                className="form-control"
+                id="end_date"
+                value={license.end_date}
                 onChange={handleChange}
-              >
-                <option value="ativa">Ativa</option>
-                <option value="expirada">Expirada</option>
-                <option value="pendente">Pendente</option>
-                <option value="desativada">Desativada</option>
-                <option value="inválida">Inválida</option>
-              </select>
+              />
             </div>
-
-            {/* Key */}
             <div className="mb-3">
-              <label htmlFor="key" className="form-label">
-                Key
-              </label>
+              <label htmlFor="license_key" className="form-label">Chave de Licença</label>
               <input
                 type="text"
                 className="form-control"
-                id="key"
-                name="key"
-                value={license.key}
+                id="license_key"
+                value={license.license_key}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Limite de Usuários */}
             <div className="mb-3">
-              <label htmlFor="userLimit" className="form-label">
-                Limite de Usuários
-              </label>
+              <label htmlFor="current_usage" className="form-label">Uso Atual</label>
               <input
                 type="number"
                 className="form-control"
-                id="userLimit"
-                name="userLimit"
-                value={license.userLimit}
+                id="current_usage"
+                value={license.current_usage}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Usuários Ativos */}
             <div className="mb-3">
-              <label htmlFor="activeUsers" className="form-label">
-                Usuários Ativos
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                id="activeUsers"
-                name="activeUsers"
-                value={license.activeUsers}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Plano */}
-            <div className="mb-3">
-              <label htmlFor="plan" className="form-label">
-                Plano
-              </label>
+              <label htmlFor="subscription_plan" className="form-label">Plano de Assinatura</label>
               <input
                 type="text"
                 className="form-control"
-                id="plan"
-                name="plan"
-                value={license.plan}
+                id="subscription_plan"
+                value={license.subscription_plan}
                 onChange={handleChange}
               />
             </div>
-
-            {/* Prioridade */}
             <div className="mb-3">
-              <label htmlFor="priority" className="form-label">
-                Prioridade
-              </label>
-              <select
-                className="form-select"
+              <label htmlFor="conditions" className="form-label">Condições</label>
+              <input
+                type="text"
+                className="form-control"
+                id="conditions"
+                value={license.conditions}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="priority" className="form-label">Prioridade</label>
+              <input
+                type="text"
+                className="form-control"
                 id="priority"
-                name="priority"
                 value={license.priority}
                 onChange={handleChange}
-              >
-                <option value="crítica">Crítica</option>
-                <option value="alta">Alta</option>
-                <option value="média">Média</option>
-                <option value="baixa">Baixa</option>
-              </select>
+              />
             </div>
-
-            {/* Botões de Ação */}
             <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-primary">
-                Salvar
-              </button>
-              <button type="button" className="btn btn-secondary">
+              <button type="submit" className="btn btn-primary">Salvar</button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => navigate('/licenses')}
+              >
                 Cancelar
               </button>
             </div>
           </form>
-
-          {/* Tabela de Usuários */}
-          <div className="mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h3 className="pb-2 border-bottom">Usuários Associados</h3>
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-              >
-                Adicionar Usuário
-              </button>
-            </div>
-            <table className="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nome</th>
-                  <th>E-mail</th>
-                  <th>Departamento</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.department}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default EditLicense;

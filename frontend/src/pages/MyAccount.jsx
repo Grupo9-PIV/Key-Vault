@@ -8,11 +8,9 @@ import '../styles/style.css';
 const MyAccount = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    name: 'User Teste',
-    email: 'user.teste@empresa.com',
-    department: 'TI',
-    password: '', // Adicionando campo de senha
-    profileImage: 'https://github.com/mdo.png', // URL da imagem de perfil
+    name: '',
+    email: '',
+    department: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -96,6 +94,14 @@ const MyAccount = () => {
     }));
   };
 
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
+
   return (
     <div className="page-container">
       <Header />
@@ -119,7 +125,7 @@ const MyAccount = () => {
                       name="name"
                       value={user.name}
                       onChange={handleChange}
-                      disabled={!isEditing} // Editável apenas quando isEditing for true
+                      disabled={!isEditing}
                     />
                   </div>
 
@@ -134,7 +140,7 @@ const MyAccount = () => {
                       name="email"
                       value={user.email}
                       onChange={handleChange}
-                      disabled // Sempre desabilitado
+                      disabled={!isEditing}
                     />
                   </div>
 
@@ -149,22 +155,7 @@ const MyAccount = () => {
                       name="department"
                       value={user.department}
                       onChange={handleChange}
-                      disabled // Sempre desabilitado
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      Senha
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="password"
-                      value={user.password}
-                      onChange={handleChange}
-                      disabled={!isEditing} // Editável apenas quando isEditing for true
+                      disabled={!isEditing}
                     />
                   </div>
 
