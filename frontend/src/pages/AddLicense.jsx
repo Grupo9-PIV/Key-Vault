@@ -3,28 +3,24 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/style.css';
 
-const EditLicense = () => {
+const CreateLicense = () => {
+  // Estado para armazenar os dados da nova licença
   const [license, setLicense] = useState({
-    softwareName: 'Software XYZ',
-    manager: 'Gerente ABC',
-    licenseType: 'assinatura',
-    version: '1.0.0',
-    acquisitionDate: '2023-01-01',
-    endDate: '2024-01-01',
-    status: 'ativa',
-    key: 'ABC123-XYZ456',
-    userLimit: 100,
-    activeUsers: 50,
-    plan: 'Plano Premium',
-    priority: 'alta',
+    softwareName: '',
+    manager: '',
+    licenseType: 'assinatura', // Valor padrão
+    version: '',
+    acquisitionDate: '',
+    endDate: '',
+    status: 'ativa', // Valor padrão
+    key: '',
+    userLimit: 0,
+    activeUsers: 0,
+    plan: '',
+    priority: 'média', // Valor padrão
   });
 
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Usuário 1', email: 'usuario1@empresa.com', department: 'TI' },
-    { id: 2, name: 'Usuário 2', email: 'usuario2@empresa.com', department: 'RH' },
-    { id: 3, name: 'Usuário 3', email: 'usuario3@empresa.com', department: 'Vendas' },
-  ]);
-
+  // Função para atualizar os dados da licença
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLicense((prevLicense) => ({
@@ -33,27 +29,18 @@ const EditLicense = () => {
     }));
   };
 
+  // Função para salvar a nova licença
   const handleSave = (e) => {
     e.preventDefault();
-    console.log('Licença salva:', license);
-  };
-
-  // Função para adicionar um novo usuário (simulação)
-  const handleAddUser = () => {
-    const newUser = {
-      id: users.length + 1, // Simula um novo ID
-      name: `Usuário ${users.length + 1}`,
-      email: `usuario${users.length + 1}@empresa.com`,
-      department: 'Novo Departamento', // Valor padrão para o departamento
-    };
-    setUsers([...users, newUser]);
+    console.log('Nova licença criada:', license);
+    // Aqui você pode adicionar a lógica para enviar os dados ao backend
   };
 
   return (
     <div className="page-container">
       <Header />
       <div className="container">
-        <h2 className="pb-2 border-bottom">Editar Licença</h2>
+        <h2 className="pb-2 border-bottom">Criar Nova Licença</h2>
         <div className="py-5">
           <form onSubmit={handleSave}>
             {/* Nome do Software */}
@@ -68,6 +55,7 @@ const EditLicense = () => {
                 name="softwareName"
                 value={license.softwareName}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -83,6 +71,7 @@ const EditLicense = () => {
                 name="manager"
                 value={license.manager}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -97,6 +86,7 @@ const EditLicense = () => {
                 name="licenseType"
                 value={license.licenseType}
                 onChange={handleChange}
+                required
               >
                 <option value="assinatura">Assinatura</option>
                 <option value="perpétua">Perpétua</option>
@@ -121,6 +111,7 @@ const EditLicense = () => {
                 name="version"
                 value={license.version}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -136,6 +127,7 @@ const EditLicense = () => {
                 name="acquisitionDate"
                 value={license.acquisitionDate}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -151,6 +143,7 @@ const EditLicense = () => {
                 name="endDate"
                 value={license.endDate}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -165,6 +158,7 @@ const EditLicense = () => {
                 name="status"
                 value={license.status}
                 onChange={handleChange}
+                required
               >
                 <option value="ativa">Ativa</option>
                 <option value="expirada">Expirada</option>
@@ -186,6 +180,7 @@ const EditLicense = () => {
                 name="key"
                 value={license.key}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -201,6 +196,7 @@ const EditLicense = () => {
                 name="userLimit"
                 value={license.userLimit}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -216,6 +212,7 @@ const EditLicense = () => {
                 name="activeUsers"
                 value={license.activeUsers}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -231,6 +228,7 @@ const EditLicense = () => {
                 name="plan"
                 value={license.plan}
                 onChange={handleChange}
+                required
               />
             </div>
 
@@ -245,6 +243,7 @@ const EditLicense = () => {
                 name="priority"
                 value={license.priority}
                 onChange={handleChange}
+                required
               >
                 <option value="crítica">Crítica</option>
                 <option value="alta">Alta</option>
@@ -256,46 +255,13 @@ const EditLicense = () => {
             {/* Botões de Ação */}
             <div className="d-flex gap-2">
               <button type="submit" className="btn btn-primary">
-                Salvar
+                Criar Licença
               </button>
               <button type="button" className="btn btn-secondary">
                 Cancelar
               </button>
             </div>
           </form>
-
-          {/* Tabela de Usuários */}
-          <div className="mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h3 className="pb-2 border-bottom">Usuários Associados</h3>
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-              >
-                Adicionar Usuário
-              </button>
-            </div>
-            <table className="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nome</th>
-                  <th>E-mail</th>
-                  <th>Departamento</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.department}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
       <Footer />
@@ -303,4 +269,4 @@ const EditLicense = () => {
   );
 };
 
-export default EditLicense;
+export default CreateLicense;
