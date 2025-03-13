@@ -189,6 +189,6 @@ const LicenseList = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default LicenseList;

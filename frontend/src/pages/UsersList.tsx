@@ -164,6 +164,6 @@ const UserList = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default UserList;

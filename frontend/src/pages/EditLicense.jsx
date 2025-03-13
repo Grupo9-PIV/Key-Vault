@@ -245,6 +245,6 @@ const EditLicense = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default EditLicense;

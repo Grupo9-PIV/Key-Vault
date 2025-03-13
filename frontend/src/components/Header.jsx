@@ -100,6 +100,6 @@ const Header = () => {
       </div>
     </header>
   );
-};
+}; //commit
 
 export default Header;

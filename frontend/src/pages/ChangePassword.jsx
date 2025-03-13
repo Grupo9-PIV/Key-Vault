@@ -112,6 +112,6 @@ const ChangePassword = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default ChangePassword;

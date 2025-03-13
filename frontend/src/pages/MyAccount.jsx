@@ -196,6 +196,6 @@ const MyAccount = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default MyAccount;

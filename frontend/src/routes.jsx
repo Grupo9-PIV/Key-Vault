@@ -19,7 +19,7 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
-        {/* Redireciona a rota raiz para /login */}
+        {/* Redireciona a rota inicial para /login */}
         <Route path="/" element={<Navigate to="/login" />} />
 
         {/* Outras rotas */}

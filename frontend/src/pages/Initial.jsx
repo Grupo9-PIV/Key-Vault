@@ -90,6 +90,6 @@ const Initial = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default Initial;

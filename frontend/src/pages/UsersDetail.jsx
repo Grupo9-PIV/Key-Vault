@@ -59,6 +59,6 @@ const UsersDetail = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default UsersDetail;

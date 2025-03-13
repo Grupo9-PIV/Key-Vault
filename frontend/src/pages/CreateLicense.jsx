@@ -310,6 +310,6 @@ const CreateLicense = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default CreateLicense;

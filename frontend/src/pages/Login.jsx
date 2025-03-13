@@ -112,6 +112,6 @@ const Login = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default Login;
