@@ -6,7 +6,7 @@
   </head>
   <body></body>
 </html>;
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Header from '../components/Header';
@@ -22,7 +22,7 @@ const Initial = () => {
     <div className="page-container">
       <Header />
       <div className="container px-4 py-5">
-        <h2 class="pb-2 border-bottom">Sistema de Gerenciamento de Licenças</h2>
+        <h2 className="pb-2 border-bottom">Sistema de Gerenciamento de Licenças</h2>
         <div className="row align-items-md-center g-5 py-5">
           <div className="col">
             <div className="row row-cols-1 row-cols-sm-2 g-4">
@@ -90,6 +90,6 @@ const Initial = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default Initial;

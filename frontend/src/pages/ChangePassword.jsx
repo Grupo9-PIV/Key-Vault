@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import api from '../api/index'; // Importe a API
 import Footer from '../components/Footer';
 import '../styles/style.css';
 
@@ -10,7 +10,7 @@ const ChangePassword = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
 
     // Validação básica
@@ -24,15 +24,38 @@ const ChangePassword = () => {
       return;
     }
 
-    // Simulação de atualização de senha
-    // Aqui você pode adicionar a lógica para atualizar a senha no backend
-    console.log('Nova senha:', newPassword);
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('user_id'); // Obtém o ID do usuário logado
 
-    // Marca que o primeiro login foi concluído
-    localStorage.setItem('isFirstLogin', 'false');
+      // Envia a nova senha para o backend
+      const response = await api.patch(
+        `/users/${userId}`,
+        { password: newPassword },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    // Redireciona para a página inicial
-    navigate('/Initial');
+      if (response.status === 200) {
+        alert('Senha alterada com sucesso!');
+        navigate('/login'); // Redireciona para a tela de login após a alteração
+      } else {
+        setError('Erro ao alterar a senha. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao alterar a senha:', error);
+      if (error.response?.status === 401) {
+        alert('Sessão expirada, faça login novamente.');
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+      setError('Erro ao alterar a senha. Verifique sua conexão e tente novamente.');
+    }
+  };
+
+  const handleCancel = () => {
+    navigate('/login'); // Redireciona para a tela de login ao cancelar
   };
 
   return (
@@ -70,9 +93,18 @@ const ChangePassword = () => {
                 />
                 <label htmlFor="confirmPassword">Confirmar Senha</label>
               </div>
-              <button className="btn btn-primary form-w mt-3" type="submit">
-                Alterar Senha
-              </button>
+              <div className="d-flex gap-2 justify-content-center mt-3">
+                <button className="btn btn-primary form-w" type="submit">
+                  Alterar Senha
+                </button>
+                <button
+                  className="btn btn-secondary form-w"
+                  type="button"
+                  onClick={handleCancel}
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -80,6 +112,6 @@ const ChangePassword = () => {
       <Footer />
     </div>
   );
-};
+}; // commit
 
 export default ChangePassword;
