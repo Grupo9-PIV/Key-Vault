@@ -68,17 +68,17 @@ const Initial = () => {
                   </h4>
                 </div>
               </Link>
-              <Link to="/renewals">
+              <Link to="/RequestsOptions">
                 <div className="align-items-center col d-flex flex-column gap-2">
                   <div className="dashboard-item feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
                     <img
                       className="p-5"
-                      src="assets/renovacoes.png"
-                      alt="Renovações"
+                      src="assets/solicitacao.png"
+                      alt="Solicitações"
                     />
                   </div>
                   <h4 className="fw-semibold mb-0 text-body-emphasis">
-                    Renovações
+                    Solicitações
                   </h4>
                 </div>
               </Link>
