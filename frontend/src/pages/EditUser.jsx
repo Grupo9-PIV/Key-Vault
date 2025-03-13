@@ -118,6 +118,7 @@ const EditUser = () => {
       <Header />
       <div className="container">
         <h2 className="pb-2 border-bottom">Editar Usuário</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
         <div className="py-5">
           {/* Formulário de edição do usuário */}
           <div className="mb-5">
@@ -321,6 +322,6 @@ const EditUser = () => {
       <Footer />
     </div>
   );
-};
+}; //commit
 
 export default EditUser;

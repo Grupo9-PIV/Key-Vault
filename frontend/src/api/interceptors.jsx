@@ -1,7 +1,6 @@
 import {
   getToken,
   setToken,
-  clearToken,
   isTokenExpiring,
 } from './tokenService';
 

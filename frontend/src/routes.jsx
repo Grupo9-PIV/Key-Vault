@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LicenseList from './pages/LicenseList';
-import LicenseDetail from './pages/LicenseDetail';
+import EditLicense from './pages/EditLicense';
 import UsersList from './pages/UsersList';
 import UsersDetail from './pages/UsersDetail';
 import Notifications from './pages/Notifications';
@@ -25,8 +25,13 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
+        {/* Redireciona a rota inicial para /login */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Outras rotas */}
         <Route path="/licenses" element={<LicenseList />} />
-        <Route path="/licenses/:id" element={<LicenseDetail />} />
+        <Route path="/licenses/edit/:licenseId" element={<EditLicense />} />
+        <Route path="/licenses/create" element={<CreateLicense />} />
         <Route path="/users" element={<UsersList />} />{' '}
         {/*Rota para pastas: models schemas services; e arquivos: user e user_service */}
         <Route path="/users/:id" element={<UsersDetail />} />
