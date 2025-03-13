@@ -15,24 +15,12 @@ const CreateUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validação simples dos campos
     if (!name || !email || !password) {
       setError('Por favor, preencha todos os campos.');
       return;
     }
 
-    // Simulação de envio de dados para o backend
     try {
-      // Aqui você faria uma requisição HTTP para o backend
-      // Exemplo com fetch:
-      // const response = await fetch('/api/users', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ name, email, password }),
-      // });
-      // const data = await response.json();
-
-      // Simulação de sucesso
       console.log('Usuário criado com sucesso:', { name, email, password });
       setError('');
       alert('Usuário criado com sucesso!');

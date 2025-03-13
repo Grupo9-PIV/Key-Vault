@@ -27,8 +27,6 @@ def test_create_license(
     )
     data = response.json()
 
-    print('Resposta recebida:', response.json())
-
     assert response.status_code == HTTPStatus.CREATED
 
     db_license = session.scalar(
