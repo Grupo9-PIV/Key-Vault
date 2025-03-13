@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../api/index'; // Importa a API configurada
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/style.css';
@@ -7,6 +8,7 @@ import '../styles/style.css';
 const CreateUser = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [department, setDepartment] = useState('');
   const [error, setError] = useState('');
@@ -15,19 +17,28 @@ const CreateUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role || !department) {
       setError('Por favor, preencha todos os campos.');
       return;
     }
 
     try {
-      console.log('Usuário criado com sucesso:', { name, email, password });
-      setError('');
+      const response = await api.post('/users/', {
+        name,
+        email,
+        password,
+        role,
+        department
+      });
+
       alert('Usuário criado com sucesso!');
       navigate('/users'); // Redireciona para a lista de usuários
     } catch (err) {
-      setError('Erro ao criar usuário. Tente novamente.');
-      console.error(err);
+      if (err.response && err.response.data && err.response.data.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError('Erro ao criar usuário. Tente novamente.');
+      }
     }
   };
 
@@ -51,6 +62,7 @@ const CreateUser = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Digite o nome do usuário"
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -64,6 +76,21 @@ const CreateUser = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Digite o e-mail do usuário"
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Digite uma senha forte"
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -77,6 +104,7 @@ const CreateUser = () => {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   placeholder="Digite a função do usuário"
+                  required
                 />
               </div>
               <div className="mb-3">
@@ -90,6 +118,7 @@ const CreateUser = () => {
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   placeholder="Digite o departamento do usuário"
+                  required
                 />
               </div>
               <div className="d-flex gap-2">

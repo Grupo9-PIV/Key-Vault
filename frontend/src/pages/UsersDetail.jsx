@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
-
+import { useParams } from 'react-router-dom';
+import api from '../api/index'; // Importe a API configurada
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const UsersDetail = () => {
-  useEffect(() => {
-    document.title = 'Detalhes dos Usuários';
-  }, []);
-
+  const { userId } = useParams(); // Pega o ID do usuário da URL
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Pegando o ID da URL
-  const userId = window.location.pathname.split('/').pop();
-
   useEffect(() => {
-    if (!userId) return;
+    console.log('Token:', localStorage.getItem('token')); // Log do token
 
-    fetch(`http://localhost:8000/users/${userId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
+    // Busca os detalhes do usuário
+    api.get(`/users/${userId}`, { 
+      headers: {
+        requiresAuth: true, // Adiciona o token de autenticação
+      },
+    })
+      .then((response) => {
+        console.log('Dados recebidos:', response.data); // Log da resposta
+        setUser(response.data); 
         setLoading(false);
       })
       .catch((error) => {
@@ -33,33 +33,29 @@ const UsersDetail = () => {
   if (!user) return <p>Usuário não encontrado.</p>;
 
   return (
-    <div>
+    <div className="page-container">
       <Header />
-      <h2>Detalhes do Usuário</h2>
-      <p>
-        <strong>ID:</strong> {user.id}
-      </p>
-      <p>
-        <strong>Nome:</strong> {user.name}
-      </p>
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
-      <p>
-        <strong>Função:</strong> {user.role}
-      </p>
-      <p>
-        <strong>Departamento:</strong> {user.department || 'Não informado'}
-      </p>
-      <p>
-        <strong>Conta criada em:</strong>{' '}
-        {new Date(user.created_at).toLocaleDateString()}
-      </p>
-
-      {/* Link para a página CRUD (substituir # pelo caminho correto depois) */}
-      <p>
-        <a href="#">Gerenciar Usuário (CRUD)</a>
-      </p>
+      <div className="container">
+        <h2>Detalhes do Usuário</h2>
+        <p>
+          <strong>ID:</strong> {user.id}
+        </p>
+        <p>
+          <strong>Nome:</strong> {user.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
+        <p>
+          <strong>Função:</strong> {user.role}
+        </p>
+        <p>
+          <strong>Departamento:</strong> {user.department || 'Não informado'}
+        </p>
+        <p>
+          <strong>Ativo:</strong> {user.is_active ? 'Sim' : 'Não'}
+        </p>
+      </div>
       <Footer />
     </div>
   );

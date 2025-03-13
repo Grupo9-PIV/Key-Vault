@@ -1,30 +1,91 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/index';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/style.css';
 
 const MyAccount = () => {
-  // Estado para armazenar os dados do usuário
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    name: 'User Teste',
-    email: 'user.teste@empresa.com',
-    department: 'TI',
-    profileImage: 'https://github.com/mdo.png', // URL da imagem de perfil
+    name: '',
+    email: '',
+    department: '',
   });
-
-  // Estado para controlar a edição
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Função para salvar as alterações
-  const handleSave = () => {
-    setIsEditing(false);
-    // Aqui você pode adicionar lógica para salvar os dados no backend
-    console.log('Dados salvos:', user);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem('user_id'); // Obtém o ID do usuário logado
+      if (!userId) {
+        setError('Usuário não autenticado.');
+        setLoading(false);
+        navigate('/login'); 
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await api.get(`/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser({
+          name: response.data.name,
+          email: response.data.email,
+          department: response.data.department,
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário:', error);
+        setError('Erro ao carregar dados do usuário.');
+        setLoading(false);
+        if (error.response?.status === 401) {
+          alert('Sessão expirada, faça login novamente.');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user_id');
+          navigate('/login');
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  const handleSave = async () => {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      setError('Usuário não autenticado.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const updatedUser = {
+        name: user.name,
+        email: user.email,
+        department: user.department,
+      };
+
+      await api.patch(`/users/${userId}`, updatedUser, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setIsEditing(false);
+      alert('Dados atualizados com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar dados do usuário:', error);
+      setError('Erro ao atualizar dados do usuário.');
+      if (error.response?.status === 401) {
+        alert('Sessão expirada, faça login novamente.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
+        navigate('/login');
+      }
+    }
   };
 
-  // Função para atualizar o estado do usuário
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -33,31 +94,13 @@ const MyAccount = () => {
     }));
   };
 
-  // Função para atualizar a foto de perfil
-  const validateProfileImage = (url) => {
-    const dataUrlPattern = /^data:image\/(png|jpg|jpeg|gif);base64,/;
-    const trustedUrlPattern = /^https:\/\/trusted\.domain\//;
-    return dataUrlPattern.test(url) || trustedUrlPattern.test(url);
-  };
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        if (validateProfileImage(result)) {
-          setUser((prevUser) => ({
-            ...prevUser,
-            profileImage: result,
-          }));
-        } else {
-          console.error('Invalid image URL');
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
 
   return (
     <div className="page-container">
@@ -70,26 +113,6 @@ const MyAccount = () => {
                 <h3 className="card-title">Minha Conta</h3>
               </div>
               <div className="card-body">
-                <div className="text-center mb-4">
-                  <img
-                    src={user.profileImage}
-                    alt="Foto de Perfil"
-                    className="rounded-circle"
-                    width="150"
-                    height="150"
-                  />
-                  {isEditing && (
-                    <div className="mt-3">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="form-control"
-                      />
-                    </div>
-                  )}
-                </div>
-
                 <form>
                   <div className="mb-3">
                     <label htmlFor="name" className="form-label">
@@ -172,7 +195,6 @@ const MyAccount = () => {
       </div>
       <Footer />
     </div>
-
   );
 };
 

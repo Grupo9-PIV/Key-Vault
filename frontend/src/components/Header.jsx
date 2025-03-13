@@ -66,7 +66,7 @@ const Header = () => {
               <div className="dropdown text-end">
                 <a
                   href="#"
-                  class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                  className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
@@ -88,7 +88,7 @@ const Header = () => {
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/Login">
                       Sair
                     </a>
                   </li>

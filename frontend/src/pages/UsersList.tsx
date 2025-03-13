@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import api from '../api/index';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/style.css';
@@ -10,6 +10,8 @@ interface User {
   name: string;
   email: string;
   role: string;
+  department: string;
+  is_active: boolean;
 }
 
 const UserList = () => {
@@ -19,21 +21,74 @@ const UserList = () => {
 
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchId, setSearchId] = useState('');
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:8000/users')
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data.users);
-        setLoading(false);
+  const fetchUsers = () => {
+    setLoading(true);
+    setError('');
+    
+    let url = '/users/?skip=0&limit=10';
+    
+    if (searchId) {
+      url = `/users/${searchId}`;
+    }
+
+    api.get(url, {
+      headers: {
+        requiresAuth: true,
+      },
+    })
+      .then((response) => {
+        if (searchId) {
+          // Se estiver buscando por ID, transforma o objeto em um array
+          setUsers([response.data]);
+        } else {
+          setUsers(response.data.users);
+        }
+        setError('');
       })
-      .catch((error) => {
-        console.error('Erro ao buscar usuários:', error);
+      .catch(() => {
+        if (searchId) {
+          setError('ID de usuário não encontrada.');
+          setUsers([]);
+        } else {
+          setError('Erro ao carregar usuários.');
+        }
+      })
+      .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
-  if (loading) return <p>Carregando...</p>;
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchUsers();
+  };
+
+  const handleDelete = async (userId: number) => {
+    const confirmDelete = window.confirm('Tem certeza que deseja excluir este usuário?');
+
+    if (confirmDelete) {
+      try {
+        await api.delete(`/users/${userId}`, {
+          headers: {
+            requiresAuth: true,
+          },
+        });
+
+        setUsers(users.filter((user) => user.id !== userId));
+        alert('Usuário excluído com sucesso!');
+      } catch (error) {
+        console.error('Erro ao excluir usuário:', error);
+        alert('Erro ao excluir usuário.');
+      }
+    }
+  };
 
   return (
     <div className="page-container">
@@ -41,403 +96,71 @@ const UserList = () => {
       <div className="container">
         <header className="d-flex justify-content-between py-3 align-items-center">
           <div>
-            <a href="/createuser" className="nav-link" aria-current="page">
+            <Link to="/createuser" className="nav-link">
               <button className="btn btn-dark me-2">Criar usuário</button>
-            </a>
+            </Link>
           </div>
           <div>
-            <form className="w-100 me-3" role="search">
+            <form className="w-100 me-3" onSubmit={handleSearch}>
               <input
-                type="search"
+                type="text"
                 className="form-control ms-2"
-                placeholder="Search..."
-                aria-label="Search"
+                placeholder="Buscar por ID..."
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
               />
+              <button type="submit" className="btn btn-primary mt-2">Buscar</button>
             </form>
           </div>
         </header>
       </div>
+
       <div className="container">
         <h2>Lista de Usuários</h2>
-        <div className="table-responsive small">
-          <table className="table table-striped table-sm dropdown">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nome</th>
-                <th scope="col">E-mail</th>
-                <th scope="col">Papel</th>
-                <th scope="col">Departamento</th>
-                <th scope="col">1º Login</th>
-                <th scope="col">Criação</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-              <tr data-bs-toggle="dropdown" aria-expanded="false">
-                <td>54858</td>
-                <td>Ewellyn Almeida</td>
-                <td>lynn@gmail.com</td>
-                <td>Admin</td>
-                <td>TI</td>
-                <td>Não</td>
-                <td>25/02/2025</td>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Editar
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Excluir
-                    </a>
-                  </li>
-                </ul>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {/*
-          <h2>Lista de Usuários</h2>*
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Função</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>
-                    <a href={`/users/${user.id}`}>{user.name}</a>
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
+
+        {loading ? (
+          <p>Carregando...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : (
+          <div className="table-responsive small">
+            <table className="table table-striped table-sm dropdown">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Papel</th>
+                  <th>Departamento</th>
+                  <th>Ativo</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        */}
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                    <td>{user.department}</td>
+                    <td>{user.is_active ? 'Sim' : 'Não'}</td>
+                    <td>
+                      <Link className="btn btn-sm btn-warning me-2" to={`/users/${user.id}/edituser`}>
+                        Editar
+                      </Link>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(user.id)}>
+                        Excluir
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
       <Footer />
     </div>
   );
