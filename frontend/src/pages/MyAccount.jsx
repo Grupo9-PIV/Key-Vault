@@ -11,6 +11,7 @@ const MyAccount = () => {
     name: '',
     email: '',
     department: '',
+    password: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,7 @@ const MyAccount = () => {
           name: response.data.name,
           email: response.data.email,
           department: response.data.department,
+          password: response.data.password,
         });
         setLoading(false);
       } catch (error) {
@@ -66,6 +68,7 @@ const MyAccount = () => {
         name: user.name,
         email: user.email,
         department: user.department,
+        password: user.password,
       };
 
       await api.patch(`/users/${userId}`, updatedUser, {
@@ -154,6 +157,21 @@ const MyAccount = () => {
                       id="department"
                       name="department"
                       value={user.department}
+                      onChange={handleChange}
+                      disabled={!isEditing}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">
+                      Senha
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                      name="password"
+                      value={user.password}
                       onChange={handleChange}
                       disabled={!isEditing}
                     />
