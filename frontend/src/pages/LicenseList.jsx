@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import '../styles/LicenseList.css';
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import '../styles/style.css';
 
 const licensesMock = [
   {
@@ -63,20 +62,133 @@ const LicenseList = () => {
     .sort((a, b) => a.software_name.localeCompare(b.software_name));
 
   return (
-    <div className="license-container">
+    <div className="page-container">
       <Header />
-      <h2>Lista de Licenças</h2>
-
-      {/* Campo de pesquisa */}
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Pesquisar licença..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {/* Tabela de licenças */}
+      <div className="container">
+        <header className="d-flex justify-content-between py-3 align-items-center">
+          <div>
+            <a href="/CreateUser" className="nav-link" aria-current="page">
+              <button className="btn btn-dark me-2">Adicionar licença</button>
+            </a>
+          </div>
+          <div>
+            <form className="w-100 me-3" role="search">
+              <input
+                type="search"
+                className="form-control ms-2"
+                placeholder="Pesquisar licença..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </form>
+          </div>
+        </header>
+      </div>
+      <div className="container">
+        <h2>Lista de Licenças</h2>
+        <div className="table-responsive small">
+          <table className="table table-striped table-sm dropdown">
+            <thead>
+              <tr>
+                <th scope="col">Software</th>
+                <th scope="col">Status</th>
+                <th scope="col">Máx. Usuários</th>
+                <th scope="col">Em Uso</th>
+                <th scope="col">Departamento</th>
+                <th scope="col">Data de Aquisição</th>
+                <th scope="col">Data de Vencimento</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-bs-toggle="dropdown" aria-expanded="false">
+                <td>Visual Studio</td>
+                <td>Ativa</td>
+                <td>20</td>
+                <td>18</td>
+                <td>TI</td>
+                <td>11/03/2025</td>
+                <td>11/03/2030</td>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
+                </ul>
+              </tr>
+              <tr data-bs-toggle="dropdown" aria-expanded="false">
+                <td>Visual Studio</td>
+                <td>Ativa</td>
+                <td>20</td>
+                <td>18</td>
+                <td>TI</td>
+                <td>11/03/2025</td>
+                <td>11/03/2030</td>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
+                </ul>
+              </tr>
+              <tr data-bs-toggle="dropdown" aria-expanded="false">
+                <td>Visual Studio</td>
+                <td>Ativa</td>
+                <td>20</td>
+                <td>18</td>
+                <td>TI</td>
+                <td>11/03/2025</td>
+                <td>11/03/2030</td>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
+                </ul>
+              </tr>
+              <tr data-bs-toggle="dropdown" aria-expanded="false">
+                <td>Visual Studio</td>
+                <td>Ativa</td>
+                <td>20</td>
+                <td>18</td>
+                <td>TI</td>
+                <td>11/03/2025</td>
+                <td>11/03/2030</td>
+                <ul className="dropdown-menu">
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Editar
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Excluir
+                    </a>
+                  </li>
+                </ul>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {/*
       <table className="license-table">
         <thead>
           <tr>
@@ -107,6 +219,7 @@ const LicenseList = () => {
           ))}
         </tbody>
       </table>
+      */}
       <Footer />
     </div>
   );

@@ -12,6 +12,7 @@ const EditUser = () => {
         <div className="py-5">
           {/* Seção não editável */}
           <div className="mb-5 row">
+
             <div className="col-md-4 text-center mb-3 mb-md-0">
               <img 
                 src="https://github.com/mdo.png" 
@@ -21,6 +22,7 @@ const EditUser = () => {
                 height="200"
               />
             </div>
+
             <div className="col-md-8">
               <div className="mb-3">
                 <label htmlFor="name" className="form-label">Nome</label>
@@ -44,6 +46,7 @@ const EditUser = () => {
               </div>
             </div>
           </div>
+
           <form>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">Nova Senha</label>

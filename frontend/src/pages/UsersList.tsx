@@ -50,7 +50,7 @@ const UserList = () => {
               <input
                 type="search"
                 className="form-control ms-2"
-                placeholder="Search..."
+                placeholder="Pesquisar usuário..."
                 aria-label="Search"
               />
             </form>
